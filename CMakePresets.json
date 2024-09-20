@@ -1,0 +1,149 @@
+﻿{
+	"version": 5,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 27,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"binaryDir": "${sourceDir}/out/bin/${presetName}",
+			"installDir": "${sourceDir}/out/install/${presetName}",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": null,
+				"CMAKE_C_COMPILER": null,
+				"CMAKE_CXX_COMPILER": null,
+				"CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+				"CMAKE_TOOLCHAIN_FILE": null
+			},
+			"description": "Base",
+			"generator": "Ninja",
+			"hidden": true,
+			"name": "Base"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl"
+			},
+			"description": "MSVC",
+			"hidden": true,
+			"inherits": "Base",
+			"name": "msvc_x64_x64",
+			"vendor": {
+				"jetbrains.com/clion": {
+					"toolchain": "msvc_x64_x64"
+				}
+			}
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cl",
+				"CMAKE_CXX_COMPILER": "cl"
+			},
+			"description": "MSVC",
+			"hidden": true,
+			"inherits": "Base",
+			"name": "msvc_x64_x86",
+			"vendor": {
+				"jetbrains.com/clion": {
+					"toolchain": "msvc_x64_x86"
+				}
+			}
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc",
+				"CMAKE_CXX_COMPILER": "g++"
+			},
+			"description": "MinGW",
+			"hidden": true,
+			"inherits": "Base",
+			"name": "mingw_x64",
+			"vendor": {
+				"jetbrains.com/clion": {
+					"toolchain": "mingw_x64"
+				}
+			}
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "clang",
+				"CMAKE_CXX_COMPILER": "clang++"
+			},
+			"description": "Clang",
+			"hidden": true,
+			"inherits": "Base",
+			"name": "clang",
+			"vendor": {
+				"jetbrains.com/clion": {
+					"toolchain": "clang"
+				}
+			}
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x64",
+			"name": "msvc_x64_x64_debug"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x64",
+			"name": "msvc_x64_x64_release"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x86",
+			"name": "msvc_x64_x86_debug"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x86",
+			"name": "msvc_x64_x86_release"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "mingw_x64",
+			"name": "mingw_x64_debug"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			},
+			"hidden": false,
+			"inherits": "mingw_x64",
+			"name": "mingw_x64_release"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "clang",
+			"name": "clang_debug"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			},
+			"hidden": false,
+			"inherits": "clang",
+			"name": "clang_release"
+		}
+	]
+}
