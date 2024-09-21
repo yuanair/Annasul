@@ -5,7 +5,7 @@
 namespace Annasul
 {
 	
-	int32 FWindowsApplication::Loop()
+	int32 FWindowsApplication::Loop(FProgram &program)
 	{
 		::MSG msg;
 		do
@@ -17,7 +17,7 @@ namespace Annasul
 			}
 			else
 			{
-			
+				program.Tick(0.0);
 			}
 		}
 		while (msg.message != WM_QUIT);

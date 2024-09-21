@@ -8,7 +8,7 @@ namespace Annasul
 	struct FWindowsApplication : public FGenericApplication
 	{
 		
-		static int32 Loop();
+		static int32 Loop(FProgram &program);
 		
 		static void Quit(int32 exitCode);
 		

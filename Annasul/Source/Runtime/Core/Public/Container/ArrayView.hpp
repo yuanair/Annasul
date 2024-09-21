@@ -5,9 +5,6 @@
 namespace Annasul
 {
 	
-	///
-	/// @tparam InElementType
-	/// @tparam InAllocatorType
 	template<typename InElementType, typename InAllocatorType>
 	class TFArrayView
 	{
@@ -25,25 +22,26 @@ namespace Annasul
 		{
 		}
 		
-		TFArrayView(const ElementType* data, SizeType size)
+		TFArrayView(const ElementType *data, SizeType size)
 			: m_data(data), m_size(size)
 		{
 		}
 		
-		TFArrayView(const TFArrayView& other) = default;
+		TFArrayView(const TFArrayView &other) = default;
+		
 		~TFArrayView() = default;
 		
-		TFArrayView& operator=(const TFArrayView& other) = default;
+		TFArrayView &operator=(const TFArrayView &other) = default;
 	
 	public:
-		[[nodiscard]] const ElementType* GetData() const
+		[[nodiscard]] const ElementType *GetData() const
 		{
 			return m_data;
 		}
 		
-		[[nodiscard]] const ElementType* GetNullTerminatedData() const
+		[[nodiscard]] const ElementType *GetNullTerminatedData() const
 		{
-			assert(m_size > 0 && m_data[m_size - 1] == ElementType{} && "TFArrayView::GetNullTerminatedData() called on a non-null-terminated array view ");
+			//assert(m_size > 0 && m_data[m_size - 1] == ElementType{} && "TFArrayView::GetNullTerminatedData() called on a non-null-terminated array view ");
 			return m_data;
 		}
 		
@@ -54,7 +52,7 @@ namespace Annasul
 	
 	private:
 		
-		const ElementType* m_data;
+		const ElementType *m_data;
 		
 		SizeType m_size;
 		

@@ -1,42 +1,133 @@
 #pragma once
 
 #include "GenericWindow.hpp"
+#include "Vector.hpp"
+#include <limits>
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
 
 namespace Annasul
 {
 	
-	class FWindowsWindow final : public FGenericWindow
+	class FWindowsWindow : public FGenericWindow
 	{
 	public:
-	
-		FWindowsWindow() : m_hWnd(nullptr) {}
-		~FWindowsWindow() override { FWindowsWindow::Destroy(); }
 		
+		friend class FWindowsWindowClass;
+	
 	public:
 		
-		void Create(const FWindowClass &windowClass, const FWindowDesc &desc) override;
+		FWindowsWindow();
 		
-		void Show() override;
+		~FWindowsWindow() override { FWindowsWindow::Destroy(); }
+	
+	public:
 		
-		void Hide() override;
+		void Create(const FWindowClass &windowClass, const FWindowDesc &desc) final;
 		
-		void Close() override;
+		void DragAcceptFiles(bool accept) final;
 		
-		void Destroy() override;
+		void SetDarkMode(bool darkMode) final;
 		
-		bool IsOpen() const override;
+		void Show() final;
 		
+		void Hide() final;
+		
+		void Close() final;
+		
+		void Destroy() final;
+		
+		[[nodiscard]] bool IsOpen() const final;
+	
+	public:
+		
+		FORCEINLINE void OnCreate() override {}
+		
+		FORCEINLINE void OnDestroy() override {}
+		
+		FORCEINLINE void OnMove(int32 x, int32 y) override {}
+		
+		FORCEINLINE void OnResize(int32 width, int32 height) override {}
+		
+		FORCEINLINE void OnActive() override {}
+		
+		FORCEINLINE void OnInactive() override {}
+		
+		FORCEINLINE void OnClickActive() override {}
+		
+		FORCEINLINE void OnClose() override { Destroy(); }
+		
+		FORCEINLINE bool OnQueryEndSession() override { return true; }
+		
+		FORCEINLINE void OnEndSession() override {}
+		
+		FORCEINLINE void OnChar(uint64 code) override {}
+		
+		FORCEINLINE void OnString(FStringView str) override {}
+		
+		FORCEINLINE void OnDropFile(Annasul::FStringView file) override {}
+	
+	public:
+		
+		FORCEINLINE void SetMinSize(const FVector2i &size) final { m_minSize = size; }
+		
+		[[nodiscard]] FORCEINLINE FVector2i GetMinSize() const final { return m_minSize; }
+		
+		FORCEINLINE void SetMaxSize(const FVector2i &size) final { m_maxSize = size; }
+		
+		[[nodiscard]] FORCEINLINE FVector2i GetMaxSize() const final { return m_maxSize; }
+		
+		FORCEINLINE void SetInputPoint(const FVector2i &point) final { m_inputPoint = point; }
+		
+		[[nodiscard]] FORCEINLINE FVector2i GetInputPoint() const final { return m_inputPoint; }
+		
+		void SetPosition(const FVector2i &position) final;
+		
+		[[nodiscard]] FVector2i GetPosition() const final;
+		
+		void SetSize(const FVector2i &size) final;
+		
+		[[nodiscard]] FVector2i GetSize() const final;
+		
+		void SetPositionAndSize(const FVector2i &position, const FVector2i &size) final;
+		
+		FVector4i GetPositionAndSize() const final;
+	
 	public:
 		
 		bool CheckWindowHandle();
+		
 		bool CheckWindowHandleNoLog();
 		
-		FORCEINLINE FWindowsPlatformTypes::HWND GetHandle() const { return m_hWnd; }
+		[[nodiscard]] FORCEINLINE FWindowsPlatformTypes::HWND GetHandle() const { return m_hWnd; }
 	
 	private:
+		
+		FORCEINLINE void SetHandle(FWindowsPlatformTypes::HWND hWnd)
+		{
+			Destroy();
+			m_hWnd = hWnd;
+		}
+		
+		FWindowsPlatformTypes::LRESULT
+		OnMessage(uint32 uMsg, FWindowsPlatformTypes::WPARAM wParam, FWindowsPlatformTypes::LPARAM lParam);
 	
+	private:
+		
 		FWindowsPlatformTypes::HWND m_hWnd;
-	
+		
+		FVector2i m_minSize = FVector2i{0, 0};
+		
+		FVector2i m_maxSize = FVector2i{std::numeric_limits<int32>::max(), std::numeric_limits<int32>::max()};
+		
+		FVector2i m_inputPoint = FVector2i{0, 0};
+		
 	};
 	
 	typedef FWindowsWindow FWindow;

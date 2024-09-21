@@ -9,19 +9,27 @@ namespace Annasul
 	{
 	public:
 		
-		static FWindowsDebug& Get();
+		static FWindowsDebug &Get();
 	
 	public:
 		
-		void Log(EDebugLevel level, FStringView message) override;
+		void Log(EDebugLevel level, FStringView message, SourceLocation location = SourceLocation::current()) override;
 		
-		bool ConditionLog(bool condition, EDebugLevel level, FStringView message) override;
+		bool ConditionLog(bool condition, EDebugLevel level, FStringView message,
+		                  SourceLocation location = SourceLocation::current()) override;
 	
 	public:
 		
-		void LastErrorLog(EDebugLevel level, FStringView message);
+		void LastErrorLog(EDebugLevel level, FStringView message, SourceLocation location = SourceLocation::current());
 		
-		bool LastErrorConditionLog(bool condition, EDebugLevel level, FStringView message);
+		bool LastErrorConditionLog(bool condition, EDebugLevel level, FStringView message,
+		                           SourceLocation location = SourceLocation::current());
+		
+		void ErrorLog(EDebugLevel level, FStringView message, uint32 errorCode,
+		              SourceLocation location = SourceLocation::current());
+		
+		bool ErrorConditionLog(bool condition, EDebugLevel level, FStringView message, uint32 errorCode,
+		                       SourceLocation location = SourceLocation::current());
 	
 	private:
 		

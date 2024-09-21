@@ -3,6 +3,8 @@
 #include "Platform.hpp"
 #include "Container/StringView.hpp"
 
+#include "SourceLocation.hpp"
+
 namespace Annasul
 {
 	
@@ -38,36 +40,27 @@ namespace Annasul
 	public:
 		
 		FGenericDebug() = default;
+		
 		virtual ~FGenericDebug() = default;
 	
 	public:
 		
-		///
-		/// @param level The level of the message to log
-		/// @param message The message to log
-		virtual void Log(EDebugLevel level, FStringView message) = 0;
+		virtual void Log(EDebugLevel level, FStringView message, SourceLocation location) = 0;
 		
-		///
-		/// @param condition condition to check
-		/// @param level The level of the message to log
-		/// @param message message to log if condition is false
-		/// @return condition
-		virtual bool ConditionLog(bool condition, EDebugLevel level, FStringView message) = 0;
+		virtual bool ConditionLog(bool condition, EDebugLevel level, FStringView message, SourceLocation location) = 0;
 		
 	};
 	
 }
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
+	
 	#include "Windows/WindowsDebug.hpp"
+
 #elif PLATFORM_LINUX
-#include "Linux/LinuxDebug.hpp"
+	#include "Linux/LinuxDebug.hpp"
 #elif PLATFORM_MACOS
 	#include "MacOS/MacOSDebug.hpp"
-#elif PLATFORM_IOS
-	#include "IOS/IOSDebug.hpp"
-#elif PLATFORM_ANDROID
-	#include "Android/AndroidDebug.hpp"
 #else
 	#error "Platform not supported!"
 #endif

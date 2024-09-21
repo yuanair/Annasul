@@ -1,9 +1,7 @@
 #include "Windows/WindowsDebug.hpp"
 
-#include "Platform.hpp"
-
 #include "Windows/Windows.hpp"
-#include <cstdio>
+#include <format>
 
 namespace Annasul
 {
@@ -15,44 +13,67 @@ namespace Annasul
 		return singleton;
 	}
 	
-	void FWindowsDebug::Log(EDebugLevel level, FStringView message)
+	void FWindowsDebug::Log(EDebugLevel level, FStringView message, SourceLocation location)
 	{
 		const FStringView levelStr = ToString(level);
-		const SIZE_T length = 1 + levelStr.GetSize() + 1 + message.GetSize() + 2;
-		const auto debugBuffer = new TCHAR[length];
-		if (::swprintf_s(debugBuffer, length, TEXT("[%s] %s") LINE_TERMINATOR, levelStr.GetNullTerminatedData(), message.GetNullTerminatedData()) < 0)
+		::OutputDebugStringA(location.file_name());
+		::OutputDebugString(
+			std::format(
+				TEXT("({}, {})[{}] {}") LINE_TERMINATOR, location.line(),
+				location.column(), levelStr.GetNullTerminatedData(),
+				message.GetNullTerminatedData()).c_str());
+		if (level >= EDebugLevel::Warning)
 		{
-			::OutputDebugString(TEXT("swprintf_s failed") LINE_TERMINATOR);
-			return;
+			DebugBreak();
 		}
-		::OutputDebugString(debugBuffer);
 	}
 	
-	bool FWindowsDebug::ConditionLog(bool condition, EDebugLevel level, FStringView message)
+	bool FWindowsDebug::ConditionLog(bool condition, EDebugLevel level, FStringView message, SourceLocation location)
 	{
 		if (condition) return true;
-		Log(level, message);
+		Log(level, message, location);
 		return false;
 	}
 	
-	void FWindowsDebug::LastErrorLog(EDebugLevel level, FStringView message)
+	void FWindowsDebug::LastErrorLog(EDebugLevel level, FStringView message, SourceLocation location)
 	{
-		const HRESULT error = HRESULT_FROM_WIN32(::GetLastError());
-		constexpr TCHAR str[] = TEXT("Windows Last Error code: ");
-		const SIZE_T length = FStringView(str).GetSize() + 20 + message.GetSize() + 2;
-		const auto debugBuffer = new TCHAR[length];
-		if (::swprintf_s(debugBuffer, length, TEXT("Windows Last Error code: %l - %s") LINE_TERMINATOR, message.GetNullTerminatedData()) < 0)
-		{
-			::OutputDebugString(TEXT("swprintf_s failed") LINE_TERMINATOR);
-			return;
-		}
-		Log(level, FStringView(debugBuffer, length));
+		ErrorLog(level, message, ::GetLastError(), location);
 	}
 	
-	bool FWindowsDebug::LastErrorConditionLog(bool condition, EDebugLevel level, FStringView message)
+	bool FWindowsDebug::LastErrorConditionLog(bool condition, EDebugLevel level, FStringView message,
+	                                          SourceLocation location)
 	{
 		if (condition) return true;
-		LastErrorLog(level, message);
+		LastErrorLog(level, message, location);
+		return false;
+	}
+	
+	void FWindowsDebug::ErrorLog(EDebugLevel level, FStringView message, uint32 errorCode, SourceLocation location)
+	{
+		LPTSTR buffer = nullptr;
+		auto bufferLength = ::FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			nullptr,
+			errorCode,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR) &buffer,
+			0,
+			nullptr
+		);
+		if (bufferLength == 0)
+		{
+			Log(EDebugLevel::Error, TEXT("FormatMessage failed"), location);
+			return;
+		}
+		Log(level, FStringView(buffer, bufferLength + 1), location);
+		::LocalFree(buffer);
+	}
+	
+	bool FWindowsDebug::ErrorConditionLog(bool condition, EDebugLevel level, FStringView message, uint32 errorCode,
+	                                      SourceLocation location)
+	{
+		if (condition) return true;
+		ErrorLog(level, message, errorCode, location);
 		return false;
 	}
 	
