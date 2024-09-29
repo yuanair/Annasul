@@ -1,5 +1,15 @@
 #pragma once
 
+#ifndef ENABLE_FEATURE_DEBUG
+#define ENABLE_FEATURE_DEBUG 0
+#endif
+#ifndef ENABLE_FEATURE_EDITORS
+#define ENABLE_FEATURE_EDITORS 0
+#endif
+#ifndef ENABLE_FEATURE_RELEASE
+#define ENABLE_FEATURE_RELEASE 0
+#endif
+
 namespace Annasul
 {
 	
