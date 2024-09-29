@@ -47,7 +47,13 @@ namespace Annasul
 		
 		virtual void Log(EDebugLevel level, FStringView message, SourceLocation location) = 0;
 		
-		virtual bool ConditionLog(bool condition, EDebugLevel level, FStringView message, SourceLocation location) = 0;
+		FORCEINLINE virtual bool
+		ConditionLog(bool condition, EDebugLevel level, FStringView message, SourceLocation location)
+		{
+			if (condition) return true;
+			Log(level, message, location);
+			return false;
+		}
 		
 	};
 	

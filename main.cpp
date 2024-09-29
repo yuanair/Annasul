@@ -1,9 +1,9 @@
 #include <Container/Pair.hpp>
 #include <GenericWindow.hpp>
-#include <GenericApplication.hpp>
 #include <GenericRenderEngineFactory.hpp>
 #include <Vector.hpp>
 #include <GenericSocket.hpp>
+#include <Launch.hpp>
 
 #include <memory>
 #include <string>
@@ -51,12 +51,12 @@ public:
 	
 	void OnDestroy() override
 	{
-		FApplication::Quit(0);
+		Quit(0);
 	}
 	
 };
 
-class FMyProgram : public FProgram
+class FMyProgram
 {
 public:
 	
@@ -68,7 +68,7 @@ public:
 		
 		std::unique_ptr<FGenericRenderEngine> renderEngine
 			{
-				FRenderEngineFactory::Create(ERenderEngineType::DirectX11)
+				FRenderEngineFactory::Create(ERenderEngineType::DirectX2D01)
 			};
 		
 		auto vector = MakeVector(0, 0);
@@ -77,25 +77,25 @@ public:
 		window.Show();
 	}
 	
-	~FMyProgram() override
+	~FMyProgram()
 	{
 	}
 
 public:
 	
-	void Tick(double deltaTime) override
+	void Tick(double deltaTime)
 	{
 		auto nowTime = std::chrono::system_clock::now();
 		auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(nowTime.time_since_epoch());
-		
-		auto position = TFVector<double, 2>(
-			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-		);
-		auto size = TFVector<double, 2>(
-			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-		);
-		window.SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
-		
+
+//		auto position = TFVector<double, 2>(
+//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+//		);
+//		auto size = TFVector<double, 2>(
+//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+//		);
+//		window.SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
+//
 	}
 
 private:
@@ -105,9 +105,3 @@ private:
 	FMyWindow window;
 	
 };
-
-int main()
-{
-	FMyProgram program;
-	return FApplication::Loop(program);
-}

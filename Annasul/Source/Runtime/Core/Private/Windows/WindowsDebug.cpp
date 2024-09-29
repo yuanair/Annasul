@@ -28,24 +28,9 @@ namespace Annasul
 		}
 	}
 	
-	bool FWindowsDebug::ConditionLog(bool condition, EDebugLevel level, FStringView message, SourceLocation location)
-	{
-		if (condition) return true;
-		Log(level, message, location);
-		return false;
-	}
-	
 	void FWindowsDebug::LastErrorLog(EDebugLevel level, FStringView message, SourceLocation location)
 	{
 		ErrorLog(level, message, ::GetLastError(), location);
-	}
-	
-	bool FWindowsDebug::LastErrorConditionLog(bool condition, EDebugLevel level, FStringView message,
-	                                          SourceLocation location)
-	{
-		if (condition) return true;
-		LastErrorLog(level, message, location);
-		return false;
 	}
 	
 	void FWindowsDebug::ErrorLog(EDebugLevel level, FStringView message, uint32 errorCode, SourceLocation location)
@@ -69,10 +54,10 @@ namespace Annasul
 		::LocalFree(buffer);
 	}
 	
-	bool FWindowsDebug::ErrorConditionLog(bool condition, EDebugLevel level, FStringView message, uint32 errorCode,
-	                                      SourceLocation location)
+	bool
+	FWindowsDebug::ErrorLogIfFailed(EDebugLevel level, FStringView message, uint32 errorCode, SourceLocation location)
 	{
-		if (condition) return true;
+		if (SUCCEEDED(errorCode)) return true;
 		ErrorLog(level, message, errorCode, location);
 		return false;
 	}

@@ -28,5 +28,14 @@ endif ()
 
 add_subdirectory(Annasul)
 
-add_executable(Main main.cpp)
-target_link_libraries(Main AnnasulCore AnnasulRender AnnasulSocket)
+if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    add_executable(Main WIN32 main.cpp)
+elseif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+    add_executable(Main main.cpp)
+elseif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Darwin")
+    add_executable(Main main.cpp)
+elseif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Android")
+    add_executable(Main main.cpp)
+endif ()
+
+target_link_libraries(Main AnnasulCore AnnasulRender AnnasulSocket AnnasulLaunch)

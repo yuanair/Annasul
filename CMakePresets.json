@@ -87,7 +87,17 @@
 			},
 			"hidden": false,
 			"inherits": "msvc_x64_x64",
-			"name": "msvc_x64_x64_debug"
+			"name": "editor_msvc_x64_x64",
+			"displayName": "Editor|MSVC x64/x64"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x64",
+			"name": "debug_msvc_x64_x64",
+			"displayName": "Debug|MSVC x64/x64"
 		},
 		{
 			"cacheVariables": {
@@ -95,7 +105,8 @@
 			},
 			"hidden": false,
 			"inherits": "msvc_x64_x64",
-			"name": "msvc_x64_x64_release"
+			"name": "release_msvc_x64_x64",
+			"displayName": "Release|MSVC x64/x64"
 		},
 		{
 			"cacheVariables": {
@@ -103,7 +114,17 @@
 			},
 			"hidden": false,
 			"inherits": "msvc_x64_x86",
-			"name": "msvc_x64_x86_debug"
+			"name": "editor_msvc_x64_x86",
+			"displayName": "Editor|MSVC x64/x86"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "msvc_x64_x86",
+			"name": "debug_msvc_x64_x86",
+			"displayName": "Debug|MSVC x64/x86"
 		},
 		{
 			"cacheVariables": {
@@ -111,7 +132,8 @@
 			},
 			"hidden": false,
 			"inherits": "msvc_x64_x86",
-			"name": "msvc_x64_x86_release"
+			"name": "release_msvc_x64_x86",
+			"displayName": "Release|MSVC x64/x86"
 		},
 		{
 			"cacheVariables": {
@@ -119,7 +141,17 @@
 			},
 			"hidden": false,
 			"inherits": "mingw_x64",
-			"name": "mingw_x64_debug"
+			"name": "editor_mingw_x64",
+			"displayName": "Editor|MinGW x64"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "mingw_x64",
+			"name": "debug_mingw_x64",
+			"displayName": "Debug|MinGW x64"
 		},
 		{
 			"cacheVariables": {
@@ -127,7 +159,8 @@
 			},
 			"hidden": false,
 			"inherits": "mingw_x64",
-			"name": "mingw_x64_release"
+			"name": "release_mingw_x64",
+			"displayName": "Release|MinGW x64"
 		},
 		{
 			"cacheVariables": {
@@ -135,7 +168,17 @@
 			},
 			"hidden": false,
 			"inherits": "clang",
-			"name": "clang_debug"
+			"name": "editor_clang",
+			"displayName": "Editor|Clang"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			},
+			"hidden": false,
+			"inherits": "clang",
+			"name": "debug_clang",
+			"displayName": "Debug|Clang"
 		},
 		{
 			"cacheVariables": {
@@ -143,7 +186,8 @@
 			},
 			"hidden": false,
 			"inherits": "clang",
-			"name": "clang_release"
+			"name": "release_clang",
+			"displayName": "Release|Clang"
 		}
 	]
 }

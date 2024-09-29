@@ -7,9 +7,9 @@ namespace Annasul
 {
 	enum class ERenderEngineType
 	{
-		DirectX11,
-		DirectX12,
-		Vulkan
+		DirectX3D11,
+		DirectX3D12,
+		DirectX2D01
 	};
 	
 	struct FGenericRenderEngineFactory
