@@ -82,9 +82,32 @@ function(add_annasul_module path depend_libs)
     traverse_and_add_files(${path}/Public)
     traverse_directories_and_add_files(${path}/Public)
 
-    message(STATUS "Header: ${headers}")
-
     add_library(Annasul${SUBDIR_NAME} STATIC ${sources} ${headers})
+    target_include_directories(Annasul${SUBDIR_NAME} PUBLIC ${path}/Public PRIVATE ${path}/Private)
+
+    if (depend_libs)
+        target_link_libraries(Annasul${SUBDIR_NAME} PUBLIC ${depend_libs})
+    endif ()
+endfunction()
+
+function(add_annasul_executable path depend_libs)
+    set(sources "")
+    set(headers "")
+
+    get_filename_component(SUBDIR_NAME ${path} NAME)
+
+    if (depend_libs)
+        message(STATUS "Executable: <${SUBDIR_NAME}> Depend: \"${depend_libs}\"")
+    else ()
+        message(STATUS "Executable: <${SUBDIR_NAME}>")
+    endif ()
+
+    traverse_and_add_files(${path}/Private)
+    traverse_directories_and_add_files(${path}/Private)
+    traverse_and_add_files(${path}/Public)
+    traverse_directories_and_add_files(${path}/Public)
+
+    add_executable(Annasul${SUBDIR_NAME} ${sources} ${headers})
     target_include_directories(Annasul${SUBDIR_NAME} PUBLIC ${path}/Public PRIVATE ${path}/Private)
 
     if (depend_libs)
@@ -97,10 +120,21 @@ if (ENABLE_FEATURE_EDITORS)
     add_annasul_module("./Source/Editor/Editor" "AnnasulLaunch;AnnasulRender")
 endif ()
 
+# first layer
 add_annasul_module("./Source/Runtime/Core" "")
+
+# second layer
 add_annasul_module("./Source/Runtime/Engine" "AnnasulCore")
-add_annasul_module("./Source/Runtime/Launch" "AnnasulEngine")
 add_annasul_module("./Source/Runtime/Math" "AnnasulCore")
-add_annasul_module("./Source/Runtime/Window" "AnnasulCore;AnnasulMath;Imm32.lib;dwmapi.lib")
-add_annasul_module("./Source/Runtime/Render" "AnnasulCore;AnnasulWindow;d2d1.lib")
+add_annasul_module("./Source/Runtime/Reflect" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Socket" "AnnasulCore;ws2_32.lib")
+
+# third layer
+add_annasul_module("./Source/Runtime/Launch" "AnnasulEngine")
+add_annasul_module("./Source/Runtime/Render" "AnnasulMath;Imm32.lib;dwmapi.lib;d2d1.lib")
+
+# fourth layer
+add_annasul_module("./Source/Runtime/MultiWindow" "AnnasulEngine;AnnasulRender")
+
+# test
+add_annasul_executable("./Source/Test/A" "")

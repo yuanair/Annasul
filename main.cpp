@@ -1,32 +1,50 @@
 #include <Container/Pair.hpp>
-#include <GenericWindow.hpp>
+#include <Window.hpp>
 #include <GenericRenderEngineFactory.hpp>
 #include <Vector.hpp>
 #include <GenericSocket.hpp>
 #include <Launch.hpp>
+#include <GenericDebug.hpp>
+#include <World.hpp>
 
 #include <memory>
 #include <string>
-#include "GenericDebug.hpp"
 
 #include <chrono>
 
 using namespace Annasul;
 
-class FMyWindow : public FWindow
+class AMyWindow : public AWindow
 {
 public:
 	
-	FMyWindow() = default;
+	AMyWindow() = default;
 	
-	~FMyWindow() override = default;
+	~AMyWindow() override = default;
 
-public:
+protected:
 	
-	void Create(const FWindowsWindowClass &windowClass)
+	void OnBeginPlay() override
 	{
-		FWindow::Create(windowClass, {TEXT("Test Window"), 400, 300, false});
+		AWindow::OnBeginPlay();
 		DragAcceptFiles(true);
+		Show();
+	}
+	
+	void OnTick(double deltaTime) override
+	{
+		auto nowTime = std::chrono::system_clock::now();
+		auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(nowTime.time_since_epoch());
+		
+		
+		auto position = TFVector<double, 2>(
+			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+		);
+		auto size = TFVector<double, 2>(
+			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+		);
+		SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
+		
 	}
 
 public:
@@ -56,16 +74,16 @@ public:
 	
 };
 
-class FMyProgram
+class FMainLevel : public FLevel
 {
 public:
 	
-	FMyProgram()
+	FMainLevel()
 		: socket(), windowClass(), window()
 	{
-		windowClass.Register({TEXT("Test Window")});
-		window.Create(windowClass);
-		
+		m_actors.emplace_back(&windowClass);
+		m_actors.emplace_back(&window);
+		window.SetWindowClass(&windowClass);
 		std::unique_ptr<FGenericRenderEngine> renderEngine
 			{
 				FRenderEngineFactory::Create(ERenderEngineType::DirectX2D01)
@@ -74,34 +92,19 @@ public:
 		auto vector = MakeVector(0, 0);
 		vector.x() = 10;
 		
-		window.Show();
 	}
 	
-	~FMyProgram()
-	{
-	}
-
-public:
-	
-	void Tick(double deltaTime)
-	{
-		auto nowTime = std::chrono::system_clock::now();
-		auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(nowTime.time_since_epoch());
-
-//		auto position = TFVector<double, 2>(
-//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-//		);
-//		auto size = TFVector<double, 2>(
-//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-//		);
-//		window.SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
-//
-	}
+	~FMainLevel() override = default;
 
 private:
 	
 	FSocket socket;
-	FWindowClass windowClass;
-	FMyWindow window;
+	AWindowClass windowClass;
+	AMyWindow window;
 	
 };
+
+void AnnasulMain()
+{
+	FWorld::Get().AddToWorld(new FMainLevel());
+}

@@ -4,7 +4,7 @@
 
 namespace Annasul
 {
-	class FWindowsWindowClass final : public FGenericWindowClass
+	class FWindowsWindowClass : public FGenericWindowClass
 	{
 	public:
 		

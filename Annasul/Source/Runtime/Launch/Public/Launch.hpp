@@ -13,3 +13,5 @@ namespace Annasul
 	
 }
 
+void AnnasulMain();
+

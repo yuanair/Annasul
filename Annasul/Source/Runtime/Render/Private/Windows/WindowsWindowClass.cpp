@@ -63,6 +63,7 @@ namespace Annasul
 			::UnregisterClass(MAKEINTATOM(m_atom), ::GetModuleHandle(nullptr)), EDebugLevel::Error,
 			TEXT("UnregisterClass failed")
 		);
+		m_atom = 0;
 	}
 	
 	bool FWindowsWindowClass::CheckAtom()

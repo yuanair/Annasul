@@ -1,6 +1,7 @@
 #include "Windows/Windows.hpp"
 #include "Platform.hpp"
 #include "World.hpp"
+#include "Launch.hpp"
 
 namespace Annasul
 {
@@ -14,6 +15,7 @@ namespace Annasul
 	{
 		::MSG msg;
 		FWorld::Get().OnStart();
+		AnnasulMain();
 		do
 		{
 			if (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))

@@ -7,6 +7,9 @@ namespace Annasul
 	
 	class ACActorComponent
 	{
+		
+		friend class AActor;
+	
 	public:
 		
 		FORCEINLINE ACActorComponent() = default;
