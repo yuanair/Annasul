@@ -43,6 +43,13 @@ private:
 
 class Hello {
 A_CLASS_BODY(Hello)
+
+public:
+	
+	void Print()
+	{
+		std::wcout << "Hello, World!" << std::endl;
+	}
 	
 };
 
@@ -65,7 +72,7 @@ int main()
 	std::wcout << Annasul::FPlatform::PLATFORM_NAME << " " << std::endl
 	           << "Is User Admin: " << Annasul::FPlatform::IsUserAnAdmin() << std::endl;
 	
-	std::wcout << Hello::GetStaticName().GetNullTerminatedData() << std::endl;
+	std::wcout << Hello::GetStaticClass().GetName().GetNullTerminatedData() << std::endl;
 	
 	int32_t n = 120;
 	Annasul::FTimer timer;

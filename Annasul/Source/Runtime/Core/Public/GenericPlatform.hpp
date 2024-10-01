@@ -13,11 +13,18 @@
 #define __TEXT(x) L##x
 #define TEXT(x) __TEXT(x)
 
+#ifdef _MSC_VER
+#define ANNASUL_FUNCTION TEXT(__FUNCSIG__)
+#elif defined(__GNUC__) || defined(__clang__)
+#define ANNASUL_FUNCTION __PRETTY_FUNCTION__
+#else
+#error "Unsupported compiler"
+#endif
+
 namespace Annasul
 {
 	
-	struct FGenericPlatformTypes
-	{
+	struct FGenericPlatformTypes {
 		typedef unsigned char uint8;
 		typedef unsigned short int uint16;
 		typedef unsigned int uint32;
@@ -32,8 +39,7 @@ namespace Annasul
 		typedef WIDECHAR TCHAR;
 	};
 	
-	struct FGenericPlatform
-	{
+	struct FGenericPlatform {
 		static bool IsDarkMode() = delete;
 		
 		static bool IsLightMode() = delete;

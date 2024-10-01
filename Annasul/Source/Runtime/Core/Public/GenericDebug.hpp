@@ -8,8 +8,7 @@
 namespace Annasul
 {
 	
-	enum class EDebugLevel
-	{
+	enum class EDebugLevel {
 		Debug,
 		Info,
 		Warning,
@@ -17,10 +16,9 @@ namespace Annasul
 		Fatal
 	};
 	
-	FORCEINLINE inline FStringView ToString(const EDebugLevel level)
+	FORCEINLINE FStringView ToString(const EDebugLevel level)
 	{
-		switch (level)
-		{
+		switch (level) {
 			case EDebugLevel::Debug:
 				return TEXT("Debug");
 			case EDebugLevel::Info:
@@ -35,18 +33,17 @@ namespace Annasul
 		return TEXT("Unknown");
 	}
 	
-	class FGenericDebug
-	{
+	class FGenericDebug {
 	public:
 		
 		FGenericDebug() = default;
 		
 		virtual ~FGenericDebug() = default;
-
+	
 	public:
-
-		static FGenericDebug* Get() = delete;
-
+		
+		static FGenericDebug *Get() = delete;
+	
 	public:
 		
 		virtual void Log(EDebugLevel level, FStringView message, SourceLocation location) = 0;
