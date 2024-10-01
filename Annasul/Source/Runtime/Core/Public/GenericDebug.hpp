@@ -17,7 +17,7 @@ namespace Annasul
 		Fatal
 	};
 	
-	FORCEINLINE FStringView ToString(const EDebugLevel level)
+	FORCEINLINE inline FStringView ToString(const EDebugLevel level)
 	{
 		switch (level)
 		{
@@ -42,7 +42,11 @@ namespace Annasul
 		FGenericDebug() = default;
 		
 		virtual ~FGenericDebug() = default;
-	
+
+	public:
+
+		static FGenericDebug* Get() = delete;
+
 	public:
 		
 		virtual void Log(EDebugLevel level, FStringView message, SourceLocation location) = 0;

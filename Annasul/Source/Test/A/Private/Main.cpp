@@ -1,3 +1,5 @@
+#include "GenericPlatform.hpp"
+#include "GenericTimer.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -36,17 +38,19 @@ T *func(T n)
 
 int main()
 {
+	std::wcout << Annasul::FPlatform::PLATFORM_NAME << " " << std::endl
+	 << "Is User Admin: " << Annasul::FPlatform::IsUserAnAdmin() << std::endl;
+
 	int32_t n = 120;
-	auto beginTime = std::chrono::high_resolution_clock::now();
+	Annasul::FTimer timer;
 	auto *arr = func<int64_t>(n);
-	auto endTime = std::chrono::high_resolution_clock::now();
-	
-	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - beginTime);
-	std::cout << "Time taken by function: " << duration.count() << " nanoseconds" << std::endl;
+	timer.Tick();
+
+	std::wcout << "Time taken by function: " << timer.GetDeltaTime() << " seconds" << std::endl;
 	
 	for (int32_t i = 0; i < n; ++i)
 	{
-		std::cout << i + 1 << ": " << arr[i] << std::endl;
+		std::wcout << i + 1 << ": " << arr[i] << std::endl;
 	}
 	
 	return 0;

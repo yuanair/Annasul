@@ -45,6 +45,10 @@ namespace Annasul
 
 #include "Windows/WindowsTimer.hpp"
 
+#elif PLATFORM_LINUX
+
+#include "Linux/LinuxTimer.hpp"
+
 #else
 #error "GenericTimer is not supported on this platform"
 #endif

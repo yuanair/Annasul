@@ -8,7 +8,11 @@ namespace Annasul
 	
 	struct FGenericMemory
 	{
-		
+
+		static void* Malloc(SIZE_T count, uint32 alignment) = delete;
+		static void* Realloc(void* original, SIZE_T count, uint32 alignment) = delete;
+		static void Free(void* original) = delete;
+
 		FORCEINLINE static void *Copy(void *dest, const void *src, const SIZE_T size)
 		{
 			return ::memcpy(dest, src, size);

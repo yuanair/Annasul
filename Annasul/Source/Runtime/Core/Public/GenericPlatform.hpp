@@ -10,6 +10,9 @@
 #define ENABLE_FEATURE_RELEASE 0
 #endif
 
+#define __TEXT(x) L##x
+#define TEXT(x) __TEXT(x)
+
 namespace Annasul
 {
 	

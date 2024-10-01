@@ -8,9 +8,6 @@
 
 #endif
 
-#define __TEXT(x) L##x
-#define TEXT(x) __TEXT(x)
-
 #define FORCEINLINE __forceinline
 #define FORCENOINLINE __declspec(noinline)
 
