@@ -7,8 +7,7 @@ namespace Annasul
 {
 	
 	template<typename InElementType, SIZE_T InSize>
-	class TFVector
-	{
+	class TFVector {
 		
 		template<typename, SIZE_T>
 		friend
@@ -37,8 +36,7 @@ namespace Annasul
 		
 		FORCEINLINE explicit TFVector(const ElementType (&value)[SIZE])
 		{
-			for (SIZE_T i = 0; i < SIZE; ++i)
-			{
+			for (SIZE_T i = 0; i < SIZE; ++i) {
 				m_data[i] = value[i];
 			}
 		}
@@ -47,10 +45,8 @@ namespace Annasul
 		
 		FORCEINLINE bool operator==(const TFVector &other) const
 		{
-			for (SIZE_T i = 0; i < SIZE; ++i)
-			{
-				if (m_data[i] != other.m_data[i])
-				{
+			for (SIZE_T i = 0; i < SIZE; ++i) {
+				if (m_data[i] != other.m_data[i]) {
 					return false;
 				}
 			}
@@ -59,14 +55,55 @@ namespace Annasul
 		
 		FORCEINLINE bool operator!=(const TFVector &other) const
 		{
-			for (SIZE_T i = 0; i < SIZE; ++i)
-			{
-				if (m_data[i] != other.m_data[i])
-				{
+			for (SIZE_T i = 0; i < SIZE; ++i) {
+				if (m_data[i] != other.m_data[i]) {
 					return true;
 				}
 			}
 			return false;
+		}
+		
+		FORCEINLINE ElementType &operator[](SIZE_T index) { return m_data[index]; }
+		
+		FORCEINLINE const ElementType &operator[](SIZE_T index) const { return m_data[index]; }
+		
+		template<typename FunctionInElementType, SIZE_T FunctionInSize>
+		FORCEINLINE TFVector<ElementType, FunctionInSize>
+		operator[](const FunctionInElementType (&indices)[FunctionInSize])
+		{
+			TFVector<ElementType, FunctionInSize> result;
+			for (SIZE_T i = 0; i < FunctionInSize; ++i) {
+				switch (indices[i]) {
+					case 'x':
+						result.m_data[i] = m_data[0];
+						break;
+					case 'y':
+						result.m_data[i] = m_data[1];
+						break;
+					case 'z':
+						result.m_data[i] = m_data[2];
+						break;
+					case 'w':
+						result.m_data[i] = m_data[3];
+						break;
+					case 'r':
+						result.m_data[i] = m_data[0];
+						break;
+					case 'g':
+						result.m_data[i] = m_data[1];
+						break;
+					case 'b':
+						result.m_data[i] = m_data[2];
+						break;
+					case 'a':
+						result.m_data[i] = m_data[3];
+						break;
+					default:
+						result.m_data[i] = {};
+						break;
+				}
+			}
+			return result;
 		}
 	
 	public:
@@ -75,8 +112,7 @@ namespace Annasul
 		FORCEINLINE TFVector<CastElementType, SIZE> Cast() const
 		{
 			TFVector<CastElementType, SIZE> result;
-			for (SIZE_T i = 0; i < SIZE; ++i)
-			{
+			for (SIZE_T i = 0; i < SIZE; ++i) {
 				result.m_data[i] = static_cast<CastElementType>(m_data[i]);
 			}
 			return result;
