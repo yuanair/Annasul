@@ -15,8 +15,7 @@ namespace Annasul
 	
 	void AWindow::OnBeginPlay()
 	{
-		if (GetWindowClass() == nullptr)
-		{
+		if (GetWindowClass() == nullptr) {
 			FDebug::Get().Log(EDebugLevel::Error, TEXT("Window class is not set"));
 			return;
 		}

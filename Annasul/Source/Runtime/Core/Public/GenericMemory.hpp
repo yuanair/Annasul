@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Platform.hpp"
-#include <cstring>
 
 namespace Annasul
 {
@@ -12,19 +11,8 @@ namespace Annasul
 		static void* Malloc(SIZE_T count, uint32 alignment) = delete;
 		static void* Realloc(void* original, SIZE_T count, uint32 alignment) = delete;
 		static void Free(void* original) = delete;
-
-		FORCEINLINE static void *Copy(void *dest, const void *src, const SIZE_T size)
-		{
-			return ::memcpy(dest, src, size);
-		}
-		
-		FORCEINLINE static void *Move(void *dest, const void *src, const SIZE_T size)
-		{
-			return ::memmove(dest, src, size);
-		}
-		
-		
-		
+		static void *Copy(void *dest, const void *src, const SIZE_T size) = delete;
+		static void *Move(void *dest, const void *src, const SIZE_T size) = delete;
 		
 	};
 	

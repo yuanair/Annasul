@@ -2,7 +2,7 @@
 	"version": 5,
 	"cmakeMinimumRequired": {
 		"major": 3,
-		"minor": 27,
+		"minor": 25,
 		"patch": 0
 	},
 	"configurePresets": [
@@ -78,6 +78,22 @@
 			"vendor": {
 				"jetbrains.com/clion": {
 					"toolchain": "clang"
+				}
+			}
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "cc",
+				"CMAKE_CXX_COMPILER": "c++"
+			},
+			"description": "wsl",
+			"hidden": true,
+			"generator": "Unix Makefiles",
+			"inherits": "Base",
+			"name": "wsl",
+			"vendor": {
+				"jetbrains.com/clion": {
+					"toolchain": "wsl"
 				}
 			}
 		},
@@ -204,6 +220,37 @@
 			"inherits": "clang",
 			"name": "release_clang",
 			"displayName": "Release|Clang"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug",
+				"ENABLE_FEATURE_DEBUG": "ON",
+				"ENABLE_FEATURE_EDITORS": "ON"
+			},
+			"hidden": false,
+			"inherits": "wsl",
+			"name": "editor_wsl",
+			"displayName": "Editor|wsl"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug",
+				"ENABLE_FEATURE_DEBUG": "ON"
+			},
+			"hidden": false,
+			"inherits": "wsl",
+			"name": "debug_wsl",
+			"displayName": "Debug|wsl"
+		},
+		{
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release",
+				"ENABLE_FEATURE_RELEASE": "ON"
+			},
+			"hidden": false,
+			"inherits": "wsl",
+			"name": "release_wsl",
+			"displayName": "Release|wsl"
 		}
 	]
 }

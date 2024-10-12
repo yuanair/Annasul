@@ -4,21 +4,17 @@
 #include "ActorComponent.hpp"
 
 #include "GenericDebug.hpp"
+#include "Container/DynamicArray.hpp"
 
-#include <vector>
 #include <memory>
-
-#pragma message("vector ")
 
 namespace Annasul
 {
 	
-	class AActor
-	{
+	class AActor {
 	public:
 		
-		enum class EActorBeginPlayState : uint8
-		{
+		enum class EActorBeginPlayState : uint8 {
 			HasNotBegunPlay,
 			BeginningPlay,
 			HasBegunPlay,
@@ -39,10 +35,8 @@ namespace Annasul
 		template<typename InComponentType>
 		[[nodiscard]] FORCEINLINE InComponentType *GetComponent() const
 		{
-			for (auto &component: m_components)
-			{
-				if (auto castedComponent = std::dynamic_pointer_cast<InComponentType>(component))
-				{
+			for (auto &component: m_components) {
+				if (auto castedComponent = std::dynamic_pointer_cast<InComponentType>(component)) {
 					return castedComponent.get();
 				}
 			}
@@ -62,12 +56,11 @@ namespace Annasul
 		template<typename InComponentType, typename... Args>
 		FORCEINLINE InComponentType *CreateComponentDefault(Args &&... args)
 		{
-			if (GetActorHasBegunPlay() != EActorBeginPlayState::HasNotBegunPlay)
-			{
+			if (GetActorHasBegunPlay() != EActorBeginPlayState::HasNotBegunPlay) {
 				FDebug::Get().Log(EDebugLevel::Error, TEXT("Cannot create component after BeginPlay has been called"));
 				return nullptr;
 			}
-			return static_cast<InComponentType *>(m_components.emplace_back(
+			return static_cast<InComponentType *>(m_components.Emplace_GetRef(
 				std::make_unique<InComponentType>(std::forward<Args>(args)...)).get());
 		}
 	
@@ -85,7 +78,7 @@ namespace Annasul
 	
 	private:
 		
-		std::vector<std::unique_ptr<ACActorComponent>> m_components;
+		TFDynamicArray<std::unique_ptr<ACActorComponent>> m_components;
 		
 		EActorBeginPlayState m_actorHasBegunPlay;
 		

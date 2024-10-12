@@ -7,11 +7,11 @@
 namespace Annasul
 {
 	
-	class AWindow : public AActor, public FWindow
-	{
+	class AWindow : public AActor, public FWindow {
 	public:
 		
 		AWindow();
+		
 		~AWindow() override;
 	
 	public:
@@ -23,7 +23,9 @@ namespace Annasul
 	protected:
 		
 		void OnBeginPlay() override;
+		
 		void OnTick(double deltaTime) override;
+		
 		void OnEndPlay() override;
 	
 	private:

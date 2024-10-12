@@ -5,12 +5,13 @@
 
 namespace Annasul
 {
-
-    class FLinuxWindowClass : public FGenericWindowClass
-    {
-
-    };
-
-    typedef FLinuxWindowClass FWindowClass;
-
+	
+	class FLinuxWindowClass : public FGenericWindowClass {
+	public:
+		
+		
+	};
+	
+	typedef FLinuxWindowClass FWindowClass;
+	
 }

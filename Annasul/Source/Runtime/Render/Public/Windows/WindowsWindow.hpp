@@ -15,8 +15,7 @@
 namespace Annasul
 {
 	
-	class FWindowsWindow : public FGenericWindow
-	{
+	class FWindowsWindow : public FGenericWindow {
 	public:
 		
 		friend class FWindowsWindowClass;
@@ -47,34 +46,6 @@ namespace Annasul
 	
 	public:
 		
-		FORCEINLINE void OnCreate() override {}
-		
-		FORCEINLINE void OnDestroy() override {}
-		
-		FORCEINLINE void OnMove(int32 x, int32 y) override {}
-		
-		FORCEINLINE void OnResize(int32 width, int32 height) override {}
-		
-		FORCEINLINE void OnActive() override {}
-		
-		FORCEINLINE void OnInactive() override {}
-		
-		FORCEINLINE void OnClickActive() override {}
-		
-		FORCEINLINE void OnClose() override { Destroy(); }
-		
-		FORCEINLINE bool OnQueryEndSession() override { return true; }
-		
-		FORCEINLINE void OnEndSession() override {}
-		
-		FORCEINLINE void OnChar(uint64 code) override {}
-		
-		FORCEINLINE void OnString(FStringView str) override {}
-		
-		FORCEINLINE void OnDropFile(Annasul::FStringView file) override {}
-	
-	public:
-		
 		FORCEINLINE void SetMinSize(const FVector2i &size) final { m_minSize = size; }
 		
 		[[nodiscard]] FORCEINLINE FVector2i GetMinSize() const final { return m_minSize; }
@@ -97,7 +68,7 @@ namespace Annasul
 		
 		void SetPositionAndSize(const FVector2i &position, const FVector2i &size) final;
 		
-		FVector4i GetPositionAndSize() const final;
+		[[nodiscard]] FVector4i GetPositionAndSize() const final;
 	
 	public:
 		

@@ -2,7 +2,7 @@
 
 #include "GenericPlatform.hpp"
 
-#define FORCEINLINE __attribute__((always_inline))
+#define FORCEINLINE __attribute__((always_inline)) inline
 #define FORCENOINLINE __attribute__((noinline))
 
 #define LINE_TERMINATOR TEXT("\n")

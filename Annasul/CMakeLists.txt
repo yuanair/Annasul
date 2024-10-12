@@ -115,7 +115,6 @@ function(add_annasul_executable path depend_libs)
     endif ()
 endfunction()
 
-
 if (ENABLE_FEATURE_EDITORS)
     add_annasul_module("./Source/Editor/Editor" "AnnasulLaunch;AnnasulRender")
 endif ()
@@ -127,11 +126,21 @@ add_annasul_module("./Source/Runtime/Core" "")
 add_annasul_module("./Source/Runtime/Engine" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Math" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Reflect" "AnnasulCore")
-add_annasul_module("./Source/Runtime/Socket" "AnnasulCore;ws2_32.lib")
+add_annasul_module("./Source/Runtime/Socket" "AnnasulCore")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(AnnasulSocket PUBLIC ws2_32.lib)
+else ()
+    
+endif ()
 
 # third layer
 add_annasul_module("./Source/Runtime/Launch" "AnnasulEngine")
-add_annasul_module("./Source/Runtime/Render" "AnnasulMath;Imm32.lib;dwmapi.lib;d2d1.lib")
+add_annasul_module("./Source/Runtime/Render" "AnnasulMath")
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(AnnasulRender PUBLIC Imm32.lib dwmapi.lib d2d1.lib)
+else ()
+
+endif ()
 
 # fourth layer
 add_annasul_module("./Source/Runtime/MultiWindow" "AnnasulEngine;AnnasulRender")

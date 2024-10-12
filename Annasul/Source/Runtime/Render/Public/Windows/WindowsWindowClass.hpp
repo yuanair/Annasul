@@ -4,8 +4,7 @@
 
 namespace Annasul
 {
-	class FWindowsWindowClass : public FGenericWindowClass
-	{
+	class FWindowsWindowClass : public FGenericWindowClass {
 	public:
 		
 		FORCEINLINE FWindowsWindowClass() : m_atom(0) {}
@@ -14,11 +13,11 @@ namespace Annasul
 	
 	public:
 		
-		void Register(const FWindowClassDesc &desc) override;
+		void Register(const FWindowClassDesc &desc) final;
 		
-		void Unregister() override;
+		void Unregister() final;
 		
-		[[nodiscard]] bool IsRegistered() const override;
+		[[nodiscard]] bool IsRegistered() const final;
 	
 	public:
 		

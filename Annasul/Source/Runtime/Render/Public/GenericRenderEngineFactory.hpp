@@ -5,15 +5,13 @@
 
 namespace Annasul
 {
-	enum class ERenderEngineType
-	{
+	enum class ERenderEngineType {
 		DirectX3D11,
 		DirectX3D12,
 		DirectX2D01
 	};
 	
-	struct FGenericRenderEngineFactory
-	{
+	struct FGenericRenderEngineFactory {
 		
 		static FGenericRenderEngine *Create(ERenderEngineType type) = delete;
 		
@@ -24,6 +22,9 @@ namespace Annasul
 #if PLATFORM_WINDOWS
 
 #include "Windows/WindowsRenderEngineFactory.hpp"
+#elif PLATFORM_LINUX
+
+#include "Linux/LinuxRenderEngineFactory.hpp"
 
 #else
 #error "Unsupported Platform"

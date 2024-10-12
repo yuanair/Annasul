@@ -9,7 +9,7 @@
 
 #include <memory>
 #include <string>
-
+#include <cmath>
 #include <chrono>
 
 using namespace Annasul;
@@ -20,6 +20,9 @@ public:
 	AMyWindow() = default;
 	
 	~AMyWindow() override = default;
+
+public:
+
 
 protected:
 	
@@ -34,15 +37,15 @@ protected:
 	{
 		auto nowTime = std::chrono::system_clock::now();
 		auto seconds = std::chrono::duration_cast<std::chrono::milliseconds>(nowTime.time_since_epoch());
-		
-		
-		auto position = TFVector<double, 2>(
-			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-		);
-		auto size = TFVector<double, 2>(
-			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
-		);
-		SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
+
+
+//		auto position = TFVector<double, 2>(
+//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+//		);
+//		auto size = TFVector<double, 2>(
+//			std::sin(seconds.count() / 100.0) * 10 + 400, std::cos(seconds.count() / 100.0) * 100 + 400
+//		);
+//		SetPositionAndSize(position.Cast<int32>(), size.Cast<int32>());
 		
 	}
 
@@ -81,6 +84,12 @@ public:
 	{
 		m_actors.Emplace(&windowClass);
 		m_actors.Emplace(&window);
+		FDebug::Get().Log(
+			EDebugLevel::Info, std::format(
+				TEXT("{:#010X} {:#010X}|{:#010X} {:#010X}"), (uintptr_t) &windowClass, (uintptr_t) &window,
+				(uintptr_t) m_actors[0],
+				(uintptr_t) m_actors[1]
+			));
 		window.SetWindowClass(&windowClass);
 		std::unique_ptr<FGenericRenderEngine> renderEngine
 			{
