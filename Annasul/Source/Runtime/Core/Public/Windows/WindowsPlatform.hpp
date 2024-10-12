@@ -21,8 +21,7 @@ typedef HWND__ *HWND;
 namespace Annasul
 {
 	
-	struct FWindowsPlatformTypes : public FGenericPlatformTypes
-	{
+	struct FWindowsPlatformTypes : public FGenericPlatformTypes {
 #ifdef _WIN64
 		typedef unsigned __int64 SIZE_T;
 		typedef __int64 SSIZE_T;
@@ -52,10 +51,8 @@ namespace Annasul
 	
 	class FStringView;
 	
-	struct FWindowsPlatform : public FGenericPlatform
-	{
-		enum Key : FPlatformTypes::uint32
-		{
+	struct FWindowsPlatform : public FGenericPlatform {
+		enum Key : FPlatformTypes::uint32 {
 			KetClassesRoot = 0x80000000,
 			KeyCurrentUser = 0x80000001,
 			KeyLocalMachine = 0x80000002,

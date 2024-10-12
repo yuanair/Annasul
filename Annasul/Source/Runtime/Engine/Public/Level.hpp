@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Platform.hpp"
-
-#include <vector>
-
-#pragma  message ("Include <vector> in Level.hpp")
+#include "Container/DynamicArray.hpp"
 
 namespace Annasul
 {
@@ -13,16 +10,14 @@ namespace Annasul
 	
 	class AActor;
 	
-	class FLevel
-	{
+	class FLevel {
 	public:
 		
 		friend class FWorld;
 	
 	public:
 		
-		enum class ERouteActorInitializationState : uint8
-		{
+		enum class ERouteActorInitializationState : uint8 {
 			Preinitialize,
 			Initialize,
 			BeginPlay,
@@ -53,7 +48,7 @@ namespace Annasul
 	
 	public:
 		
-		std::vector<AActor *> m_actors;
+		TFDynamicArray<AActor *> m_actors;
 	
 	private:
 		

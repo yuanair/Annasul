@@ -21,6 +21,10 @@
 #error "Unsupported compiler"
 #endif
 
+#ifndef RESTRICT
+	#define RESTRICT __restrict
+#endif
+
 namespace Annasul
 {
 	

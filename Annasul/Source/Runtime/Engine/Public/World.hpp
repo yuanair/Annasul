@@ -5,23 +5,16 @@
 #include "GenericDebug.hpp"
 #include "GenericTimer.hpp"
 
-#include <vector>
-#include <memory>
-
-#pragma message("TODO: delete this include<vector>")
-
 namespace Annasul
 {
 	
-	class FWorld final
-	{
+	class FWorld final {
 		
 		friend int32 Main();
 	
 	public:
 		
-		enum class EWorldStartState : uint8
-		{
+		enum class EWorldStartState : uint8 {
 			NotStarted,
 			Starting,
 			Started,
@@ -67,7 +60,7 @@ namespace Annasul
 	
 	private:
 		
-		std::vector<std::unique_ptr<FLevel>> m_levels;
+		TFDynamicArray<FLevel *> m_levels;
 		
 		FTimer m_timer;
 		

@@ -2,7 +2,7 @@
 
 function(traverse_and_add_files dir)
     file(GLOB CPP_FILES "${dir}/*.cpp")
-    file(GLOB HPP_FILES "${dir}/*.hpp")
+    file(GLOB HPP_FILES "${dir}/*.hpp" "${dir}/*.inl")
     #        foreach (CPP_FILE ${CPP_FILES})
     #            get_filename_component(CPP_FILE_NAME ${CPP_FILE} NAME_WE)
     #            message(STATUS "CPP_FILES: ${CPP_FILE}")

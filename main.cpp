@@ -14,8 +14,7 @@
 
 using namespace Annasul;
 
-class AMyWindow : public AWindow
-{
+class AMyWindow : public AWindow {
 public:
 	
 	AMyWindow() = default;
@@ -74,15 +73,14 @@ public:
 	
 };
 
-class FMainLevel : public FLevel
-{
+class FMainLevel : public FLevel {
 public:
 	
 	FMainLevel()
 		: socket(), windowClass(), window()
 	{
-		m_actors.emplace_back(&windowClass);
-		m_actors.emplace_back(&window);
+		m_actors.Emplace(&windowClass);
+		m_actors.Emplace(&window);
 		window.SetWindowClass(&windowClass);
 		std::unique_ptr<FGenericRenderEngine> renderEngine
 			{

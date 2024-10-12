@@ -2,38 +2,38 @@
 
 #include "ArrayView.hpp"
 #include "Platform.hpp"
-#include "DefaultAllocator.hpp"
+#include "HeapAllocator.hpp"
 
 #include <string>
 
 namespace Annasul
 {
 	
-	class FStringView : public TFArrayView<TCHAR, FDefaultAllocator> {
+	class FStringView : public TFArrayView<TCHAR, FHeapAllocator> {
 	public:
 		
 		
 		template<SizeType InSize>
 		FORCEINLINE constexpr FStringView(const ElementType (&data)[InSize]) // NOLINT(*-explicit-constructor)
-			: TFArrayView<TCHAR, FDefaultAllocator>(data)
+			: TFArrayView(data)
 		{
 		}
 		
 		FORCEINLINE FStringView(const std::basic_string<TCHAR> &str) // NOLINT(*-explicit-constructor)
-			: TFArrayView<TCHAR, FDefaultAllocator>(str.data(), str.size() + 1)
+			: TFArrayView(str.data(), str.size() + 1)
 		{
 		
 		}
 		
-		FORCEINLINE FStringView(const ElementType *data, SizeType size) : TFArrayView<TCHAR, FDefaultAllocator>(
+		FORCEINLINE FStringView(const ElementType *data, SizeType size) : TFArrayView(
 			data, size
 		) {}
 		
-		FORCEINLINE constexpr FStringView(const TFArrayView<TCHAR, FDefaultAllocator> &other)
-			: TFArrayView<TCHAR, FDefaultAllocator>(other) {}
+		FORCEINLINE constexpr FStringView(const TFArrayView &other)
+			: TFArrayView(other) {}
 		
-		FORCEINLINE constexpr FStringView(TFArrayView<TCHAR, FDefaultAllocator> &&other)
-			: TFArrayView<TCHAR, FDefaultAllocator>(std::move(other)) {}
+		FORCEINLINE constexpr FStringView(TFArrayView &&other)
+			: TFArrayView(std::move(other)) {}
 		
 		FORCEINLINE constexpr ~FStringView() = default;
 	

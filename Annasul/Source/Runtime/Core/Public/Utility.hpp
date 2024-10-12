@@ -43,4 +43,11 @@ namespace Annasul
 	template<typename InType>
 	using InOutArgumentType = typename InOutArgument<InType>::Type;
 	
+	template<typename FuncType, typename... ArgTypes>
+	FORCEINLINE auto Invoke(FuncType &&func, ArgTypes &&... args)
+	-> decltype(std::forward<FuncType>(func)(std::forward<ArgTypes>(args)...))
+	{
+		return std::forward<FuncType>(func)(std::forward<ArgTypes>(args)...);
+	}
+	
 }
