@@ -139,8 +139,9 @@ namespace Annasul
 	FMethod &
 	FClass::RegisterMethod(const FStringView &methodName, InReturnType(InClassType::*methodPtr)(InArgumentsType...))
 	{
-		m_methods[methodName] = FMethod{methodName,
-		                                (void *) (InReturnType (InClassType::*)(InArgumentsType...)) (methodPtr)};
+		return m_methods[methodName] = FMethod{methodName,
+		                                       (void *) (InReturnType (InClassType::*)(
+			                                       InArgumentsType...)) (methodPtr)};
 	}
 	
 }

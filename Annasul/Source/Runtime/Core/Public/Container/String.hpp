@@ -32,7 +32,24 @@ namespace Annasul
 	
 	public:
 		
-		FORCEINLINE FString &operator=(const FString &other) = default;
+		FORCEINLINE FString &operator=(std::initializer_list<ElementType> initList)
+		{
+			m_data = initList;
+			return *this;
+		}
+		
+		template<SizeType InSize>
+		FORCEINLINE FString &operator=(const ElementType (&data)[InSize])
+		{
+			m_data = data;
+			return *this;
+		}
+		
+		FORCEINLINE FString &operator=(const FString &other)
+		{
+			m_data = other.m_data;
+			return *this;
+		}
 		
 		FORCEINLINE FString &operator=(FString &&other) noexcept
 		{
@@ -81,23 +98,41 @@ namespace Annasul
 	
 	public:
 		
+		FORCEINLINE auto begin() { return m_data.begin(); }
+		
+		[[nodiscard]] FORCEINLINE auto begin() const { return m_data.begin(); }
+		
+		FORCEINLINE auto end() { return m_data.end(); }
+		
+		[[nodiscard]] FORCEINLINE auto end() const { return m_data.end(); }
+		
+		FORCEINLINE auto rbegin() { return m_data.rbegin(); }
+		
+		[[nodiscard]] FORCEINLINE auto rbegin() const { return m_data.rbegin(); }
+		
+		FORCEINLINE auto rend() { return m_data.rend(); }
+		
+		[[nodiscard]] FORCEINLINE auto rend() const { return m_data.rend(); }
+	
+	public:
+		
 		FORCEINLINE ArrayType &GetArray() { return m_data; }
 		
-		FORCEINLINE const ArrayType &GetArray() const { return m_data; }
+		[[nodiscard]] FORCEINLINE const ArrayType &GetArray() const { return m_data; }
 		
 		FORCEINLINE ElementType *GetData() { return m_data.GetData(); }
 		
-		FORCEINLINE const ElementType *GetData() const { return m_data.GetData(); }
+		[[nodiscard]] FORCEINLINE const ElementType *GetData() const { return m_data.GetData(); }
 		
-		FORCEINLINE SizeType GetSize() const { return m_data.GetSize(); }
+		[[nodiscard]] FORCEINLINE SizeType GetSize() const { return m_data.GetSize(); }
 		
-		FORCEINLINE SizeType GetCapacity() const { return m_data.GetCapacity(); }
+		[[nodiscard]] FORCEINLINE SizeType GetCapacity() const { return m_data.GetCapacity(); }
 		
 		FORCEINLINE AllocatorType &GetAllocator() { return m_data.GetAllocator(); }
 		
-		FORCEINLINE const AllocatorType &GetAllocator() const { return m_data.GetAllocator(); }
+		[[nodiscard]] FORCEINLINE const AllocatorType &GetAllocator() const { return m_data.GetAllocator(); }
 		
-		FORCEINLINE bool IsEmpty() const { return m_data.IsEmpty(); }
+		[[nodiscard]] FORCEINLINE bool IsEmpty() const { return m_data.IsEmpty(); }
 	
 	private:
 		

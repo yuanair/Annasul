@@ -99,6 +99,27 @@ namespace Annasul
 		}
 	}
 	
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
+	template <typename ElementType, typename SizeType>
+	FORCEINLINE bool CompareItems(const ElementType* A, const ElementType* B, SizeType Count)
+	{
+		while (Count)
+		{
+			if (!(*A == *B))
+			{
+				return false;
+			}
+			
+			++A;
+			++B;
+			--Count;
+		}
+		
+		return true;
+	}
+#pragma clang diagnostic pop
+	
 }
 
 #if PLATFORM_WINDOWS

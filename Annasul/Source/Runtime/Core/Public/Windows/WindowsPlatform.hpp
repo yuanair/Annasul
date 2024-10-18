@@ -12,6 +12,8 @@
 #define FORCENOINLINE __declspec(noinline)
 
 #define LINE_TERMINATOR TEXT("\r\n")
+#define LINE_TERMINATOR_CHAR TEXT('\n')
+#define END_OF_FILE (-1)
 
 #define CALLBACK    __stdcall
 

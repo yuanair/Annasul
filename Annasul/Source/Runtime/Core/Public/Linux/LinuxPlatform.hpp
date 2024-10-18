@@ -6,6 +6,9 @@
 #define FORCENOINLINE __attribute__((noinline))
 
 #define LINE_TERMINATOR TEXT("\n")
+#define LINE_TERMINATOR_CHAR TEXT('\n')
+
+#define END_OF_FILE (-1)
 
 namespace Annasul
 {

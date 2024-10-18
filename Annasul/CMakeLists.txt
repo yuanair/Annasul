@@ -124,13 +124,14 @@ add_annasul_module("./Source/Runtime/Core" "")
 
 # second layer
 add_annasul_module("./Source/Runtime/Engine" "AnnasulCore")
+add_annasul_module("./Source/Runtime/Language" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Math" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Reflect" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Socket" "AnnasulCore")
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_link_libraries(AnnasulSocket PUBLIC ws2_32.lib)
 else ()
-    
+
 endif ()
 
 # third layer
@@ -146,4 +147,4 @@ endif ()
 add_annasul_module("./Source/Runtime/MultiWindow" "AnnasulEngine;AnnasulRender")
 
 # test
-add_annasul_executable("./Source/Test/A" "AnnasulCore;AnnasulReflect")
+add_annasul_executable("./Source/Test/A" "AnnasulCore;AnnasulReflect;AnnasulLanguage")

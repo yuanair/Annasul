@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GenericPlatform.hpp"
+#include "Platform.hpp"
 #include "Utility.hpp"
 #include "HeapAllocator.hpp"
 #include "Helpers.hpp"
@@ -227,7 +227,12 @@ namespace Annasul
 			return Emplace_GetRef(Item);
 		}
 		
-		FORCEINLINE bool Equals(const TFDynamicArray &other) const;
+		FORCEINLINE bool Equals(const TFDynamicArray &other) const
+		{
+			SizeType count = GetSize();
+			
+			return count == other.GetSize() && CompareItems(GetData(), other.GetData(), count);
+		}
 		
 		template<typename OtherElementType, typename OtherAllocatorType>
 		void Append(const TFDynamicArray<OtherElementType, OtherAllocatorType> &source)
