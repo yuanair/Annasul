@@ -84,12 +84,6 @@ public:
 	{
 		m_actors.Emplace(&windowClass);
 		m_actors.Emplace(&window);
-		FDebug::Get().Log(
-			EDebugLevel::Info, std::format(
-				TEXT("{:#010X} {:#010X}|{:#010X} {:#010X}"), (uintptr_t) &windowClass, (uintptr_t) &window,
-				(uintptr_t) m_actors[0],
-				(uintptr_t) m_actors[1]
-			));
 		window.SetWindowClass(&windowClass);
 		std::unique_ptr<FGenericRenderEngine> renderEngine
 			{

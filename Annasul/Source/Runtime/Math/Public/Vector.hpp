@@ -2,6 +2,7 @@
 
 #include "Platform.hpp"
 #include "Utility.hpp"
+#include "VectorSEE.hpp"
 
 namespace Annasul
 {
