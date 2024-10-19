@@ -123,7 +123,6 @@ endif ()
 add_annasul_module("./Source/Runtime/Core" "")
 
 # second layer
-add_annasul_module("./Source/Runtime/Engine" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Language" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Math" "AnnasulCore")
 add_annasul_module("./Source/Runtime/Reflect" "AnnasulCore")
@@ -135,6 +134,7 @@ else ()
 endif ()
 
 # third layer
+add_annasul_module("./Source/Runtime/Engine" "AnnasulMath")
 add_annasul_module("./Source/Runtime/Launch" "AnnasulEngine")
 add_annasul_module("./Source/Runtime/Render" "AnnasulMath")
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
