@@ -1,6 +1,6 @@
 annasul = "0.1.0"
 [dir]
-id = "toml"
+id = "测试中文"
 type = "dir"
 filter = "*.toml"
 [dir.file]

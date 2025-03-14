@@ -3,13 +3,18 @@ use std::{ffi::OsStr, fs, path::Path};
 
 use serde::{Deserialize, Serialize};
 
+pub mod consts {
+    pub const BUILD_OUT_DIR: &str = "__annasul_build";
+    pub const OUT_ASSET_FILE_NAME: &str = "asset.rs";
+    pub const OUT_ASSET_FILE_PATH: &str = "__annasul_build/asset.rs";
+}
 
 #[macro_export]
 macro_rules! build {
     () => {
         use std::path::Path;
         let base_path = Path::new(&env!("CARGO_MANIFEST_DIR"));
-        let out_path = base_path.join("src/__asset.rs");
+        let out_path = base_path.join($crate::consts::OUT_ASSET_FILE_PATH);
         let asset_dir = base_path.join("asset");
         $crate::build(&base_path, &out_path, &asset_dir)?;
     };
@@ -23,6 +28,7 @@ pub enum Error {
     StripPrefixError(std::path::StripPrefixError),
     Toml(toml::de::Error),
     ExtendBehaivorNotFound(String),
+    NotIdentifier(String),
 }
 
 impl std::fmt::Display for Error {
@@ -32,6 +38,7 @@ impl std::fmt::Display for Error {
             Error::StripPrefixError(e) => write!(f, "path strip prefix error: {}", e),
             Error::Toml(e) => write!(f, "toml deserialization error: {}", e),
             Error::ExtendBehaivorNotFound(s) => write!(f, "extend behavior is not found for: {}", s),
+            Error::NotIdentifier(s) => write!(f, "not an identifier: {}", s),
         }
     }
 }
@@ -43,6 +50,7 @@ impl std::error::Error for Error {
             Error::StripPrefixError(e) => Some(e),
             Error::Toml(e) => Some(e),
             Error::ExtendBehaivorNotFound(_) => None,
+            Error::NotIdentifier(_) => None,
         }
     }
 }
@@ -164,6 +172,14 @@ pub fn build(base_path: &Path, out_path: &Path, asset_dir: &Path) -> Result<()> 
         panic!("asset directory not found: {}", asset_dir.display());
     }
     println!("cargo:rerun-if-changed={}", asset_dir.display());
+    println!("cargo:rerun-if-changed={}", out_path.display());
+    println!("cargo:rustc-env=ANNASUL_BUILD_ASSET_FILE_PATH={}", out_path.display());
+    if let Some(parent) =  out_path.parent() {
+        println!("cargo:rustc-env=ANNASUL_BUILD_OUT_DIR={}", parent.display());
+        if !parent.exists() {
+            fs::create_dir_all(parent)?;
+        }
+    }
     let mut asset = String::new();
     process_dir(base_path, asset_dir, &mut asset, &MetaDirFile::default())?;
     fs::write(&out_path, asset)?;
@@ -171,92 +187,97 @@ pub fn build(base_path: &Path, out_path: &Path, asset_dir: &Path) -> Result<()> 
 }
 
 fn process_dir(base_path: &Path, current_path: &Path, code: &mut String, meta_dir_file: &MetaDirFile) -> Result<()> {
+    let meta_path = current_path.with_added_extension("meta");
+    if !meta_path.exists() {
+        println!("cargo:warning=meta file not found for: {}", meta_path.display());
+        return Ok(());
+    }
+
+    let meta_content = fs::read_to_string(&meta_path)?;
+    let meta: Meta = toml::from_str(&meta_content)?;
+    assert_eq!(meta.annasul, env!("CARGO_PKG_VERSION"));
+    let meta_dir = &meta.dir.expect(&format!("{} is a directory, but no [dir] is defined in meta file", current_path.display()));
+    let mod_name = check_ident(&meta_dir.id)?;
+    
+    code.push_str(&format!(
+        "#[allow(non_snake_case)]\npub mod {} {{\n",
+        mod_name
+    ));
     let entries = fs::read_dir(current_path)
         .unwrap()
         .filter_map(|e| e.ok())
         .collect::<Vec<_>>();
 
-    for entry in entries.iter().filter(|e| e.path().is_dir()) {
-        let dir_name = entry.path();
-        let meta_path = dir_name.with_added_extension("meta");
-        if !meta_path.exists() {
-            println!("cargo:warning=meta file not found for: {:?}", meta_path);
-            continue;
+    for entry in entries.iter() {
+        if entry.file_type()?.is_dir() {
+            process_dir(base_path, &entry.path(), code, &meta_dir.file.with_parent(&meta_dir_file))?;
+        } else if entry.file_type()?.is_file() {
+            process_file(base_path, &entry.path(), code, &meta_dir.file.with_parent(&meta_dir_file))?;
+        } else {
+            println!("cargo:warning=unknown file type for: {}", entry.path().display());
         }
-
-        let meta_content = fs::read_to_string(&meta_path)?;
-        let meta: Meta = toml::from_str(&meta_content)?;
-        assert_eq!(meta.annasul, env!("CARGO_PKG_VERSION"));
-        let meta_dir = &meta.dir.expect(&format!("{:?} is a directory, but no [dir] is defined in meta file", dir_name));
-        let mod_name = sanitize_ident(&meta_dir.id);
-        
-        code.push_str(&format!(
-            "#[allow(non_snake_case)]\npub mod {} {{\n",
-            mod_name
-        ));
-        process_dir(base_path, &entry.path(), code, &meta_dir.file.with_parent(&meta_dir_file))?;
-        code.push_str("}\n");
     }
 
-    for entry in entries.iter().filter(|e| e.path().is_file()) {
-        let file_path = entry.path();
-        if file_path.extension() == Some(&OsStr::new("meta")) {
-            continue;
-        }
-        let meta_path = file_path.with_added_extension("meta");
-        if !meta_path.exists() {
-            println!("cargo:warning=meta file not found for: {:?}", meta_path);
-            continue;
-        }
-
-        let meta_content = fs::read_to_string(&meta_path)?;
-        let meta: Meta = toml::from_str(&meta_content)?;
-        assert_eq!(meta.annasul, env!("CARGO_PKG_VERSION"));
-        let meta_file = meta.file.expect(&format!("{:?} is a file, but no [file] is defined in meta file", file_path)).with_parent(meta_dir_file);
-        match meta_file.behavior {
-            MetaBehavior::Extend => Err(Error::ExtendBehaivorNotFound(format!("{}", file_path.display())))?,
-            MetaBehavior::CopyOnly => {
-
-                let relative_path = file_path
-                    .strip_prefix(base_path)?
-                    .to_str()
-                    .unwrap()
-                    .replace('\\', "/");
-        
-                let const_name = sanitize_ident(&meta_file.id);
-        
-                let (ty, macro_used) = match meta_file._type {
-                    MetaFileType::Extend => Err(Error::ExtendBehaivorNotFound(format!("{}", file_path.display())))?,
-                    MetaFileType::Text => ("&'static str", "include_str!"),
-                    MetaFileType::Binary => ("&'static [u8]", "include_bytes!"),
-                };
-        
-                code.push_str(&format!(
-                    r#"#[allow(non_upper_case_globals)]
-pub const {const_name}: {ty} = {macro_used}(concat!(env!("CARGO_MANIFEST_DIR"), "/{relative_path}"));"#
-));
-            }
-        }
-        
-    }
+    code.push_str("}\n");
     Ok(())
 }
 
-fn sanitize_ident(name: &str) -> String {
+fn process_file(base_path: &Path, file_path: &Path, code: &mut String, meta_dir_file: &MetaDirFile) -> Result<()> {
+    if file_path.extension() == Some(&OsStr::new("meta")) {
+        return Ok(());
+    }
+    let meta_path = file_path.with_added_extension("meta");
+    if !meta_path.exists() {
+        println!("cargo:warning=meta file not found for: {}", meta_path.display());
+        return Ok(());
+    }
+
+    let meta_content = fs::read_to_string(&meta_path)?;
+    let meta: Meta = toml::from_str(&meta_content)?;
+    assert_eq!(meta.annasul, env!("CARGO_PKG_VERSION"));
+    let meta_file = meta.file
+        .expect(&format!("{} is a file, but no [file] is defined in meta file", file_path.display()))
+        .with_parent(meta_dir_file);
+    match meta_file.behavior {
+        MetaBehavior::Extend => Err(Error::ExtendBehaivorNotFound(format!("{}", file_path.display()))),
+        MetaBehavior::CopyOnly => {
+
+            let relative_path = file_path
+                .strip_prefix(base_path)?
+                .to_str()
+                .unwrap()
+                .replace('\\', "/");
+    
+            let const_name = check_ident(&meta_file.id)?;
+    
+            let (ty, macro_used) = match meta_file._type {
+                MetaFileType::Extend => Err(Error::ExtendBehaivorNotFound(format!("{}", file_path.display())))?,
+                MetaFileType::Text => ("&'static str", "include_str!"),
+                MetaFileType::Binary => ("&'static [u8]", "include_bytes!"),
+            };
+    
+            code.push_str(&format!(
+                r#"#[allow(non_upper_case_globals)]
+pub const {const_name}: {ty} = {macro_used}(concat!(env!("CARGO_MANIFEST_DIR"), "/{relative_path}"));"#
+));
+            Ok(())
+        }
+    }
+}
+
+fn check_ident(name: &str) -> Result<String> {
     let mut s = String::with_capacity(name.len());
+    if let Some(first) = name.chars().next() {
+        if first.is_numeric() {
+            Err(Error::NotIdentifier(format!("{:?} is not an identifier, because it starts with a number", name)))?
+        }
+    }
     for c in name.chars() {
-        if c.is_alphanumeric() {
+        if c.is_alphanumeric() || c == '_' {
             s.push(c);
         } else {
-            s.push('_');
+            Err(Error::NotIdentifier(format!("{:?} is not an identifier, because it contains non-alphanumeric character: {:?}", name, c)))?;
         }
     }
-    
-    if let Some(first) = s.chars().next() {
-        if first.is_numeric() {
-            s.insert(0, '_');
-        }
-    }
-    
-    s
+    Ok(s)
 }
