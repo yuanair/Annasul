@@ -1,5 +1,6 @@
 #![feature(path_add_extension)]
-use std::{ffi::OsStr, fs, path::Path, process};
+use glob::Pattern;
+use std::{borrow::Cow, ffi::OsStr, fs, path::Path, process};
 
 use serde::{Deserialize, Serialize};
 
@@ -112,6 +113,64 @@ pub struct MetaDir {
     #[serde(rename = "type")]
     _type: MetaDirType,
     file: MetaDirFile,
+    filter: Option<DirFilter>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DirFilter {
+    include: Vec<String>,
+    exclude: Vec<String>,
+    recursive: bool,
+}
+
+impl DirFilter {
+    pub fn create_buf(&self) -> DirFilterBuf {
+        DirFilterBuf {
+            include: self
+                .include
+                .iter()
+                .map(|s| Pattern::new(s).unwrap())
+                .collect(),
+            exclude: self
+                .exclude
+                .iter()
+                .map(|s| Pattern::new(s).unwrap())
+                .collect(),
+        }
+    }
+}
+
+impl Default for DirFilter {
+    fn default() -> Self {
+        Self {
+            include: vec![],
+            exclude: vec![],
+            recursive: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct DirFilterBuf {
+    include: Vec<Pattern>,
+    exclude: Vec<Pattern>,
+}
+
+impl DirFilterBuf {
+    pub fn should_include(&self, path: &Path) -> bool {
+        let file_name = path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or_default();
+
+        // 排除模式优先
+        if self.exclude.iter().any(|p| p.matches(file_name)) {
+            return false;
+        }
+
+        // 包含模式检查
+        self.include.is_empty() || self.include.iter().any(|p| p.matches(file_name))
+    }
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
@@ -221,6 +280,13 @@ fn process_dir(
         "{} is a directory, but no [dir] is defined in meta file",
         current_path.display()
     ));
+
+    let dir_filter: Cow<DirFilter> = if let Some(filter) = &meta_dir.filter {
+        Cow::Borrowed(filter)
+    } else {
+        Cow::Owned(DirFilter::default())
+    };
+    let dir_filter_buf = dir_filter.create_buf();
     let mod_name = check_ident(&meta_dir.id)?;
 
     code.push_str(&format!(
@@ -233,17 +299,24 @@ fn process_dir(
         .collect::<Vec<_>>();
 
     for entry in entries.iter() {
+        let path = entry.path();
         if entry.file_type()?.is_dir() {
+            if !dir_filter.recursive {
+                continue;
+            }
             process_dir(
                 base_path,
-                &entry.path(),
+                &path,
                 code,
                 &meta_dir.file.with_parent(&meta_dir_file),
             )?;
         } else if entry.file_type()?.is_file() {
+            if !dir_filter_buf.should_include(&path) {
+                continue;
+            }
             process_file(
                 base_path,
-                &entry.path(),
+                &path,
                 code,
                 &meta_dir.file.with_parent(&meta_dir_file),
             )?;
