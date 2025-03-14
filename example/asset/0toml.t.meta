@@ -1,0 +1,8 @@
+annasul = "0.1.0"
+[dir]
+id = "toml"
+type = "dir"
+filter = "*.toml"
+[dir.file]
+type = "text"
+behavior = "copy_only"
