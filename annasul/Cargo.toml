@@ -5,9 +5,9 @@ edition = "2024"
 
 [dependencies]
 annasul_build = { version = "0.1.0", path = "../annasul_build" }
-log = { version = "0.4.26"}
-serde = { version = "1.0.219"}
-toml = { version = "0.8.20"}
-num = { version = "0.4.3"}
-ash = { version = "0.38.0"}
-winit = { version = "0.30.9"}
+log = { version = "0.4.26" }
+serde = { version = "1.0.219" }
+toml = { version = "0.8.20" }
+num = { version = "0.4.3" }
+ash = { version = "0.38.0" }
+winit = { version = "0.30.9" }
