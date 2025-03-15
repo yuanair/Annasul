@@ -22,7 +22,7 @@ use vulkano::{
         DynamicState, GraphicsPipeline, PipelineLayout, PipelineShaderStageCreateInfo,
         graphics::{
             GraphicsPipelineCreateInfo,
-            color_blend::{ColorBlendAttachmentState, ColorBlendState},
+            color_blend::{AttachmentBlend, ColorBlendAttachmentState, ColorBlendState},
             input_assembly::InputAssemblyState,
             multisample::MultisampleState,
             rasterization::RasterizationState,
@@ -33,7 +33,8 @@ use vulkano::{
     },
     render_pass::{Framebuffer, FramebufferCreateInfo, RenderPass, Subpass},
     swapchain::{
-        Surface, Swapchain, SwapchainCreateInfo, SwapchainPresentInfo, acquire_next_image,
+        Surface, SurfaceInfo, Swapchain, SwapchainCreateInfo, SwapchainPresentInfo,
+        acquire_next_image,
     },
     sync::{self, GpuFuture, event},
 };
@@ -209,6 +210,12 @@ impl RenderDevice {
                 .physical_device()
                 .surface_formats(&surface, Default::default())
                 .unwrap()[0];
+            info!("Using image format: {:?}", image_format);
+            let composite_alphas: Vec<_> = surface_capabilities
+                .supported_composite_alpha
+                .into_iter()
+                .collect();
+            info!("Using composite alpha: {:?}", composite_alphas);
 
             Swapchain::new(
                 self.device.clone(),
@@ -218,11 +225,7 @@ impl RenderDevice {
                     image_format,
                     image_extent: window_size.into(),
                     image_usage: ImageUsage::COLOR_ATTACHMENT,
-                    composite_alpha: surface_capabilities
-                        .supported_composite_alpha
-                        .into_iter()
-                        .next()
-                        .unwrap(),
+                    composite_alpha: composite_alphas[0],
                     ..Default::default()
                 },
             )
@@ -258,6 +261,31 @@ impl RenderDevice {
                 ",
             }
         }
+
+        // let color_blend = ColorBlendState {
+        //     attachments: vec![
+        //         // 为每个颜色附件配置混合参数
+        //         AttachmentBlend {
+        //             color_op: BlendOp::Add,                           // 颜色混合操作
+        //             color_source: BlendFactor::SrcAlpha,              // 源颜色因子
+        //             color_destination: BlendFactor::OneMinusSrcAlpha, // 目标颜色因子
+        //             alpha_op: BlendOp::Add,                           // Alpha 通道混合操作
+        //             alpha_source: BlendFactor::One,                   // 源 Alpha 因子
+        //             alpha_destination: BlendFactor::Zero,             // 目标 Alpha 因子
+        //             ..Default::default()
+        //         },
+        //     ],
+        //     ..Default::default()
+        // };
+        // let pipeline = GraphicsPipeline::start()
+        //     .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
+        //     .input_assembly_state(InputAssemblyState::new())
+        //     .viewport_state(ViewportState::viewport_dynamic_scissor_irrelevant())
+        //     .fragment_shader(fs.entry_point("main").unwrap(), ())
+        //     .render_pass(Subpass::from(render_pass, 0).unwrap())
+        //     .color_blend_state(color_blend) // 关键：应用颜色混合配置
+        //     .build(self.device.clone())
+        //     .unwrap();
 
         let render_pass = vulkano::single_pass_renderpass!(
             self.device.clone(),
@@ -404,7 +432,7 @@ impl RenderDevice {
         builder
             .begin_render_pass(
                 RenderPassBeginInfo {
-                    clear_values: vec![Some([0.0, 0.0, 1.0, 1.0].into())],
+                    clear_values: vec![Some([0.0, 0.0, 1.0, 0.0].into())],
                     ..RenderPassBeginInfo::framebuffer(
                         rcx.framebuffers[image_index as usize].clone(),
                     )

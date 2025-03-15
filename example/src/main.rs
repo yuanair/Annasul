@@ -5,6 +5,7 @@ use winit::application::ApplicationHandler;
 use winit::event::{ElementState, KeyEvent, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
+use winit::platform::windows::WindowAttributesExtWindows;
 use winit::window::{Window, WindowId};
 
 include_asset!();
@@ -25,8 +26,15 @@ impl App {
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = event_loop
-            .create_window(Window::default_attributes())
+            .create_window(
+                Window::default_attributes()
+                    .with_no_redirection_bitmap(true)
+                    .with_decorations(true)
+                    .with_transparent(true),
+            )
             .unwrap();
+
+        // window_vibrancy::apply_mica(&window, None).unwrap();
         let window_id = window.id();
 
         let rcx = self.device.create_rcx(window);
@@ -55,8 +63,13 @@ impl ApplicationHandler for App {
                 ..
             } => {
                 let window = event_loop
-                    .create_window(Window::default_attributes())
+                    .create_window(
+                        Window::default_attributes()
+                            .with_transparent(true)
+                            .with_blur(true),
+                    )
                     .unwrap();
+                window_vibrancy::apply_mica(&window, None).unwrap();
                 let window_id = window.id();
                 let rcx = self.device.create_rcx(window);
 
