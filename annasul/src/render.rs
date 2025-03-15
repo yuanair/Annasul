@@ -16,7 +16,7 @@ use vulkano::{
         physical::PhysicalDeviceType,
     },
     image::{Image, ImageUsage, view::ImageView},
-    instance::{self, Instance, InstanceCreateFlags, InstanceCreateInfo},
+    instance::{self, Instance, InstanceCreateFlags, InstanceCreateInfo, InstanceExtensions},
     memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator},
     pipeline::{
         DynamicState, GraphicsPipeline, PipelineLayout, PipelineShaderStageCreateInfo,
@@ -83,7 +83,10 @@ impl RenderDevice {
             VULKAN_LIBRARY.clone(),
             InstanceCreateInfo {
                 flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
-                enabled_extensions: required_extensions,
+                enabled_extensions: required_extensions.union(&InstanceExtensions {
+                    ext_swapchain_colorspace: true,
+                    ..Default::default()
+                }),
                 ..Default::default()
             },
         )
@@ -205,12 +208,13 @@ impl RenderDevice {
                 .physical_device()
                 .surface_capabilities(&surface, Default::default())
                 .unwrap();
-            let (image_format, _) = self
+            let formats = self
                 .device
                 .physical_device()
                 .surface_formats(&surface, Default::default())
-                .unwrap()[0];
-            info!("Using image format: {:?}", image_format);
+                .unwrap();
+            let (image_format, color_space) = formats[0];
+            info!("Using image format: {:?}", formats);
             let composite_alphas: Vec<_> = surface_capabilities
                 .supported_composite_alpha
                 .into_iter()
@@ -223,6 +227,7 @@ impl RenderDevice {
                 SwapchainCreateInfo {
                     min_image_count: surface_capabilities.min_image_count.max(2),
                     image_format,
+                    image_color_space: color_space,
                     image_extent: window_size.into(),
                     image_usage: ImageUsage::COLOR_ATTACHMENT,
                     composite_alpha: composite_alphas[0],
@@ -261,31 +266,6 @@ impl RenderDevice {
                 ",
             }
         }
-
-        // let color_blend = ColorBlendState {
-        //     attachments: vec![
-        //         // 为每个颜色附件配置混合参数
-        //         AttachmentBlend {
-        //             color_op: BlendOp::Add,                           // 颜色混合操作
-        //             color_source: BlendFactor::SrcAlpha,              // 源颜色因子
-        //             color_destination: BlendFactor::OneMinusSrcAlpha, // 目标颜色因子
-        //             alpha_op: BlendOp::Add,                           // Alpha 通道混合操作
-        //             alpha_source: BlendFactor::One,                   // 源 Alpha 因子
-        //             alpha_destination: BlendFactor::Zero,             // 目标 Alpha 因子
-        //             ..Default::default()
-        //         },
-        //     ],
-        //     ..Default::default()
-        // };
-        // let pipeline = GraphicsPipeline::start()
-        //     .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
-        //     .input_assembly_state(InputAssemblyState::new())
-        //     .viewport_state(ViewportState::viewport_dynamic_scissor_irrelevant())
-        //     .fragment_shader(fs.entry_point("main").unwrap(), ())
-        //     .render_pass(Subpass::from(render_pass, 0).unwrap())
-        //     .color_blend_state(color_blend) // 关键：应用颜色混合配置
-        //     .build(self.device.clone())
-        //     .unwrap();
 
         let render_pass = vulkano::single_pass_renderpass!(
             self.device.clone(),
