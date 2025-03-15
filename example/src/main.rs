@@ -2,8 +2,9 @@ use annasul::include_asset;
 
 use annasul::render::RenderDevice;
 use winit::application::ApplicationHandler;
-use winit::event::WindowEvent;
+use winit::event::{ElementState, KeyEvent, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::keyboard::{Key, NamedKey};
 use winit::window::{Window, WindowId};
 
 include_asset!();
@@ -36,10 +37,30 @@ impl ApplicationHandler for App {
     fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::CloseRequested => {
-                event_loop.exit();
+                self.device.remove_rcx(id).unwrap();
+                if self.device.windows_iter().count() == 0 {
+                    event_loop.exit();
+                }
             }
             WindowEvent::Resized(_) => {
                 self.device.resize_rcx(id).unwrap();
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        logical_key: Key::Named(NamedKey::Space),
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => {
+                let window = event_loop
+                    .create_window(Window::default_attributes())
+                    .unwrap();
+                let window_id = window.id();
+                let rcx = self.device.create_rcx(window);
+
+                self.device.add_rcx(window_id, rcx);
             }
             WindowEvent::RedrawRequested => self.device.render_rcx(id).unwrap(),
             _ => (),

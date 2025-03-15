@@ -345,6 +345,12 @@ impl RenderDevice {
     pub fn add_rcx(&mut self, window_id: WindowId, rcx: RenderContext) {
         self.rcxs.insert(window_id, rcx);
     }
+    pub fn remove_rcx(&mut self, window_id: WindowId) -> Option<()> {
+        self.rcxs.remove(&window_id).map(|_| ())
+    }
+    pub fn windows_iter(&self) -> impl Iterator<Item = &Arc<Window>> {
+        self.rcxs.values().map(|s| &s.window)
+    }
     pub fn resize_rcx(&mut self, window_id: WindowId) -> Result<()> {
         self.rcxs.get_mut(&window_id).unwrap().recreate_swapchain = true;
         Ok(())
