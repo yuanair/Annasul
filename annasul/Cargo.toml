@@ -9,5 +9,7 @@ log = { version = "0.4.26" }
 serde = { version = "1.0.219" }
 toml = { version = "0.8.20" }
 num = { version = "0.4.3" }
-ash = { version = "0.38.0" }
+vulkano = { version = "*" }
+vulkano-shaders = { version = "*" }
 winit = { version = "0.30.9" }
+lazy_static = { version = "*" }

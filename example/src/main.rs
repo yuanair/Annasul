@@ -1,8 +1,83 @@
 use annasul::include_asset;
 
+use annasul::render::RenderDevice;
+use winit::application::ApplicationHandler;
+use winit::event::WindowEvent;
+use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::window::{Window, WindowId};
+
 include_asset!();
 
-fn main() {
-    let config: toml::Value = toml::from_str(asset::测试中文::test_toml).unwrap();
-    println!("{:?}", config);
+struct App {
+    device: RenderDevice,
+}
+
+impl App {
+    fn new<T>(
+        event_loop: &winit::event_loop::EventLoop<T>,
+    ) -> Result<Self, annasul::render::Error> {
+        let device = RenderDevice::new(event_loop)?;
+        Ok(Self { device })
+    }
+}
+
+impl ApplicationHandler for App {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        let window = event_loop
+            .create_window(Window::default_attributes())
+            .unwrap();
+        let window_id = window.id();
+
+        let rcx = self.device.create_rcx(window);
+
+        self.device.add_rcx(window_id, rcx);
+    }
+
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+        match event {
+            WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
+            WindowEvent::Resized(_) => {
+                self.device.resize_rcx(id).unwrap();
+            }
+            WindowEvent::RedrawRequested => self.device.render_rcx(id).unwrap(),
+            _ => (),
+        }
+    }
+    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
+        self.device.all_window_request_redraw();
+    }
+}
+
+// Intentionally use `fn main` for clarity
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut builder = env_logger::Builder::from_default_env();
+    #[cfg(debug_assertions)]
+    builder.target(env_logger::Target::Stdout);
+    #[cfg(not(debug_assertions))]
+    builder.target(env_logger::Target::Pipe(Box::new(std::fs::File::open(
+        "log.log",
+    )?)));
+    builder.init();
+    log::info!(
+        "platform: {}_{}",
+        std::env::consts::OS,
+        std::env::consts::ARCH
+    );
+    let event_loop = EventLoop::new()?;
+
+    // ControlFlow::Poll continuously runs the event loop, even if the OS hasn't
+    // dispatched any events. This is ideal for games and similar applications.
+    // event_loop.set_control_flow(ControlFlow::Poll);
+
+    // ControlFlow::Wait pauses the event loop if no events are available to process.
+    // This is ideal for non-game applications that only update in response to user
+    // input, and uses significantly less power/CPU time than ControlFlow::Poll.
+    event_loop.set_control_flow(ControlFlow::Wait);
+
+    let mut app = App::new(&event_loop)?;
+    event_loop.run_app(&mut app)?;
+
+    Ok(())
 }
