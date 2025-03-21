@@ -1,11 +1,12 @@
 ///
+/// # Prelude module.
 ///
-///
+pub mod prelude;
 pub mod render;
 pub mod utils;
 pub use annasul_build::consts;
 
-/// Include the generated asset file.
+/// # Include the generated asset file.
 /// ```json
 /// // .vscode/settings.json
 /// // Attention: If you get UNRESOLVED_ENV_VAR error in vscode rust-analyzer, please add the following configuration in .vscode/settings.json:
