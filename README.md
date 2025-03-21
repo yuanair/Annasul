@@ -4,6 +4,10 @@ A multi-platform application library
 + Language: Rust
 + Platforms: Windows, Linux, macOS, Android, iOS
 
+## 许可证
+
+![AGPL-3.0-or-later](https://www.gnu.org/graphics/agplv3-155x51.png)
+
 # For developers
 
 ### 1. **Clone the Repository in VSCode**
