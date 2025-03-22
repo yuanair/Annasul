@@ -106,9 +106,9 @@ impl RendererBuilder {
     ///
     /// # Build
     ///
-    pub async fn build(&self) -> Result<Box<dyn Renderer>> {
+    pub fn build(&self) -> Result<Box<dyn Renderer>> {
         match self.api {
-            RenderAPI::WGPU => Ok(Box::new(wgpu::RendererImpl::new().await?) as Box<dyn Renderer>),
+            RenderAPI::WGPU => Ok(todo!()),
         }
     }
 }

@@ -5,11 +5,13 @@ edition = "2024"
 build = "build.rs"
 
 [dependencies]
+wgpu = { version = "24.0.3", features = ["glsl"] }
 annasul = { version = "0.1.0", path = "../annasul" }
 toml = "0.8.20"
 winit = { version = "0.30.9" }
 log = { version = "*" }
 env_logger = { version = "*" }
 window-vibrancy = "0.5.2"
+pollster = "0.4.0"
 [build-dependencies]
 annasul_build = { version = "0.1.0", path = "../annasul_build" }

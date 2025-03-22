@@ -1,0 +1,5 @@
+annasul = "0.1.0"
+[file]
+id = "test_glsl"
+type = "text"
+behavior = "copy_only"

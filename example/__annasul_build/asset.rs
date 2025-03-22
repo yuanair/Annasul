@@ -8,4 +8,7 @@ pub mod asset {
             "/asset/0测试空格 test space/0test.toml"
         ));
     }
+    #[allow(non_upper_case_globals)]
+    pub const test_glsl: &'static str =
+        include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/asset/test.glsl"));
 }
