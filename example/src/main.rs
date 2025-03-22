@@ -1,6 +1,6 @@
 use annasul::include_asset;
 
-use annasul::render::RenderDevice;
+use annasul::render::{Renderer, RendererBuilder};
 use winit::application::ApplicationHandler;
 use winit::event::{ElementState, KeyEvent, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
@@ -11,15 +11,13 @@ use winit::window::{Window, WindowId};
 include_asset!();
 
 struct App {
-    device: RenderDevice,
+    renderer: Box<dyn Renderer>,
 }
 
 impl App {
-    fn new<T>(
-        event_loop: &winit::event_loop::EventLoop<T>,
-    ) -> Result<Self, annasul::render::Error> {
-        let device = RenderDevice::new(event_loop)?;
-        Ok(Self { device })
+    fn new<T>(event_loop: &winit::event_loop::EventLoop<T>) -> annasul::render::Result<Self> {
+        let renderer = RendererBuilder::new().build()?;
+        Ok(Self { renderer })
     }
 }
 

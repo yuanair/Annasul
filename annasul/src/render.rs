@@ -11,7 +11,6 @@
 //!
 //!
 //!
-mod vulkan;
 
 ///
 /// # Render Error
@@ -65,22 +64,22 @@ pub trait Renderer {
     /// # Arguments
     /// + `window`: A reference to the window to create the surface for.
     ///
-    fn create_surface(
-        &self,
-        window: &(impl raw_window_handle::HasWindowHandle + raw_window_handle::HasDisplayHandle),
-    ) -> Result<Box<dyn Surface>>;
+    fn create_surface(&self, window: &winit::window::Window) -> Result<Box<dyn Surface>>;
 }
 
 ///
 /// # Render API
 ///
+#[derive(Default, Debug, Clone, Copy)]
 pub enum RenderAPI {
-    Vulkan,
+    #[default]
+    WGPU,
 }
 
 ///
 /// # Renderer Builder
 ///
+#[derive(Default)]
 pub struct RendererBuilder {
     api: RenderAPI,
 }
@@ -92,7 +91,7 @@ impl RendererBuilder {
     ///
     pub fn new() -> Self {
         Self {
-            api: RenderAPI::Vulkan,
+            api: RenderAPI::WGPU,
         }
     }
 
@@ -107,9 +106,9 @@ impl RendererBuilder {
     ///
     /// # Build
     ///
-    pub fn build(&self) -> Result<Box<dyn Renderer>> {
+    pub async fn build(&self) -> Result<Box<dyn Renderer>> {
         match self.api {
-            RenderAPI::Vulkan => Ok(Box::new(vulkan::Renderer::new()?) as Box<dyn Renderer>),
+            RenderAPI::WGPU => Ok(Box::new(wgpu::RendererImpl::new().await?) as Box<dyn Renderer>),
         }
     }
 }

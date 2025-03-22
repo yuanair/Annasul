@@ -1,6 +1,11 @@
-#![feature(path_add_extension)]
 use glob::Pattern;
-use std::{borrow::Cow, ffi::OsStr, fs, path::Path, process};
+use std::{
+    borrow::Cow,
+    ffi::OsStr,
+    fs,
+    path::{Path, PathBuf},
+    process,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -268,7 +273,7 @@ fn process_dir(
     code: &mut String,
     meta_dir_file: &MetaDirFile,
 ) -> Result<()> {
-    let meta_path = current_path.with_added_extension("meta");
+    let meta_path = with_meta(current_path);
     if !meta_path.exists() {
         panic!("meta file not found for: {}", meta_path.display());
     }
@@ -345,7 +350,7 @@ fn process_file(
         }
         return Ok(());
     }
-    let meta_path = file_path.with_added_extension("meta");
+    let meta_path = with_meta(file_path);
     if !meta_path.exists() {
         panic!("meta file not found for: {}", meta_path.display());
     }
@@ -413,4 +418,10 @@ fn check_ident(name: &str) -> Result<String> {
         }
     }
     Ok(s)
+}
+
+fn with_meta(path: &Path) -> PathBuf {
+    let mut path_buf = path.as_os_str().to_owned();
+    path_buf.push(".meta");
+    path_buf.into()
 }
