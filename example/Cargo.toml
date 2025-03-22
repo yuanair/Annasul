@@ -13,5 +13,8 @@ log = { version = "*" }
 env_logger = { version = "*" }
 window-vibrancy = "0.5.2"
 pollster = "0.4.0"
+eframe = "0.31.1"
+egui_extras = { version = "0.31.1", features = ["all_loaders"] }
+image = "0.25.5"
 [build-dependencies]
 annasul_build = { version = "0.1.0", path = "../annasul_build" }
