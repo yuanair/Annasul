@@ -14,6 +14,10 @@
                 {
                     "name": "RUST_LOG",
                     "value": "info"
+                },
+                {
+                    "name": "RUST_BACKTRACE",
+                    "value": "1"
                 }
             ],
             "console": "integratedTerminal"

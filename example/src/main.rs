@@ -1,15 +1,68 @@
 //隐藏Windows上的控制台窗口
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
+
+use std::{
+    io::Write,
+    sync::{Arc, RwLock, mpsc},
+    thread,
+};
 
 use annasul::include_asset;
 use eframe::egui::{
-    self, ColorImage, Image, TextureHandle, TextureOptions, UiBuilder, Vec2, ViewportCommand,
+    self, Color32, ColorImage, Image, RichText, TextureHandle, TextureOptions, UiBuilder, Vec2,
+    ViewportCommand,
 };
+use log::info;
 use wgpu::rwh::HasWindowHandle;
 
+enum Command {
+    RunRhai {
+        script: String,
+        result: Arc<RwLock<Option<Result<String, String>>>>,
+        output: Arc<RwLock<String>>,
+    },
+    Exit,
+}
+
 include_asset!();
+
 fn main() -> Result<(), eframe::Error> {
-    // 创建视口选项，设置视口的内部大小为320x240像素
+    env_logger::Builder::from_default_env()
+        .target(env_logger::Target::Stdout)
+        .format(|buf, record| {
+            annasul::log::write_global_buffer(record);
+            buf.write_fmt(format_args!("{}", record.args()))
+        })
+        .init();
+    // 创建通信通道
+    let (cmd_sender, cmd_receiver) = mpsc::channel::<Command>();
+
+    // 启动主线程处理 Rhai
+    let main_thread = thread::spawn(move || {
+        let mut app = MainThreadApp::new();
+        while let Ok(cmd) = cmd_receiver.recv() {
+            match cmd {
+                Command::RunRhai {
+                    script,
+                    result,
+                    output,
+                } => {
+                    app.rhai_engine.on_print(move |s| {
+                        *output.write().unwrap() = s.to_owned();
+                    });
+                    *result.write().unwrap() = Some(
+                        app.rhai_engine
+                            .eval_expression::<rhai::Dynamic>(&script)
+                            .map(|v| format!("{v:?}"))
+                            .map_err(|e| format!("{e:?}")),
+                    );
+                }
+                Command::Exit => break,
+            }
+        }
+    });
+
+    // 启动 UI
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default().with_min_inner_size([320.0, 240.0]),
         vsync: false,
@@ -20,24 +73,34 @@ fn main() -> Result<(), eframe::Error> {
         ..Default::default()
     };
 
-    // 运行egui应用程序
     eframe::run_native(
-        "My egui App", // 应用程序的标题
-        options,       // 视口选项
+        "Rhai + egui Demo",
+        options,
         Box::new(|cc| {
-            // 为我们提供图像支持
             egui_extras::install_image_loaders(&cc.egui_ctx);
-            // 创建并返回一个实现了eframe::App trait的对象
-            Ok(Box::new(MyApp::new(cc)))
+            Ok(Box::new(UIThreadApp::new(cc, cmd_sender)))
         }),
-    )
+    )?;
+    main_thread.join().unwrap();
+    Ok(())
 }
 
-//定义 MyApp 结构体
-struct MyApp {
+struct MainThreadApp {
     rhai_engine: rhai::Engine,
+}
+
+impl MainThreadApp {
+    fn new() -> Self {
+        let rhai_engine = rhai::Engine::new();
+        Self { rhai_engine }
+    }
+}
+
+struct UIThreadApp {
     rhai_script: String,
-    rhai_result: Result<rhai::Dynamic, Box<rhai::EvalAltResult>>,
+    rhai_output: Arc<RwLock<String>>,
+    rhai_result: Arc<RwLock<Option<Result<String, String>>>>,
+    main_thread_sender: std::sync::mpsc::Sender<Command>,
     image: TextureHandle,
     name: String,
     age: u32,
@@ -61,8 +124,8 @@ fn load_image_from_memory(
 }
 
 //MyApp 结构体 new 函数
-impl MyApp {
-    fn new(cc: &eframe::CreationContext<'_>) -> Self {
+impl UIThreadApp {
+    fn new(cc: &eframe::CreationContext<'_>, sender: std::sync::mpsc::Sender<Command>) -> Self {
         let window = cc.window_handle().unwrap();
         #[cfg(target_os = "windows")]
         window_vibrancy::apply_mica(window, None).unwrap();
@@ -74,11 +137,11 @@ impl MyApp {
             None,
         )
         .unwrap();
-        // 结构体赋初值
         Self {
-            rhai_engine: rhai::Engine::new(),
             rhai_script: "0".to_string(),
-            rhai_result: Ok(rhai::Dynamic::UNIT),
+            main_thread_sender: sender,
+            rhai_output: Arc::new(RwLock::new("".to_string())),
+            rhai_result: Arc::new(RwLock::new(None)),
             image: load_image_from_memory(
                 &cc.egui_ctx,
                 "example_image",
@@ -93,7 +156,7 @@ impl MyApp {
 }
 
 //实现 eframe::App trait
-impl eframe::App for MyApp {
+impl eframe::App for UIThreadApp {
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         egui::Color32::TRANSPARENT.to_normalized_gamma_f32()
     }
@@ -120,20 +183,32 @@ impl eframe::App for MyApp {
             ui.add(egui::Slider::new(&mut self.age, 0..=120).text("age"));
 
             if ui.button("Increment").clicked() {
-                // 点击按钮后将年龄加1
+                info!("age += 1");
                 self.age += 1;
             }
 
             // 显示问候语
             ui.label(format!("Hello '{}', age {}", self.name, self.age));
             // 运行Rhai脚本
-            ui.label(format!("{:?}", &self.rhai_result));
-            if ui.text_edit_singleline(&mut self.rhai_script).lost_focus() {
-                self.rhai_result = self.rhai_engine.eval::<rhai::Dynamic>(&self.rhai_script);
+            let mut is_running = ui.text_edit_singleline(&mut self.rhai_script).lost_focus();
+            if let Some(result) = &*self.rhai_result.read().unwrap() {
+                ui.label(match result {
+                    Ok(v) => RichText::new(v).color(Color32::GREEN),
+                    Err(e) => RichText::new(e).color(Color32::RED),
+                });
             }
-            if ui.button("Run").clicked() {
-                self.rhai_result = self.rhai_engine.eval::<rhai::Dynamic>(&self.rhai_script);
+            is_running |= ui.button("Run").clicked();
+            ui.label(self.rhai_output.read().unwrap().as_str());
+            if is_running {
+                self.main_thread_sender
+                    .send(Command::RunRhai {
+                        script: self.rhai_script.clone(),
+                        result: self.rhai_result.clone(),
+                        output: self.rhai_output.clone(),
+                    })
+                    .unwrap();
             }
+
             // 显示图片
             // ui.add(
             //     Image::new(&self.image)
@@ -141,5 +216,35 @@ impl eframe::App for MyApp {
             //         .rotate((self.age as f32).to_radians(), Vec2::splat(0.5)),
             // );
         });
+        egui::CentralPanel::default().show(ctx, |ui| {
+            log_panel(ui);
+        });
     }
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        self.main_thread_sender.send(Command::Exit).unwrap();
+    }
+}
+
+fn log_panel(ui: &mut egui::Ui) {
+    let logs = annasul::log::read_global_buffer().unwrap();
+
+    egui::ScrollArea::vertical()
+        .stick_to_bottom(true) // 自动滚动到底部
+        .show(ui, |ui| {
+            for log_message in logs.iter() {
+                let color = match log_message.level {
+                    log::Level::Trace => egui::Color32::MAGENTA,
+                    log::Level::Debug => egui::Color32::BLUE,
+                    log::Level::Info => egui::Color32::WHITE,
+                    log::Level::Warn => egui::Color32::YELLOW,
+                    log::Level::Error => egui::Color32::RED,
+                };
+
+                let timestamp = format!("{:?}", log_message.timestamp);
+                ui.horizontal(|ui| {
+                    ui.colored_label(color, timestamp);
+                    ui.colored_label(color, &log_message.message);
+                });
+            }
+        });
 }
