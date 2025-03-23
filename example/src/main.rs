@@ -35,6 +35,9 @@ fn main() -> Result<(), eframe::Error> {
 
 //定义 MyApp 结构体
 struct MyApp {
+    rhai_engine: rhai::Engine,
+    rhai_script: String,
+    rhai_result: Result<rhai::Dynamic, Box<rhai::EvalAltResult>>,
     image: TextureHandle,
     name: String,
     age: u32,
@@ -73,6 +76,9 @@ impl MyApp {
         .unwrap();
         // 结构体赋初值
         Self {
+            rhai_engine: rhai::Engine::new(),
+            rhai_script: "0".to_string(),
+            rhai_result: Ok(rhai::Dynamic::UNIT),
             image: load_image_from_memory(
                 &cc.egui_ctx,
                 "example_image",
@@ -120,12 +126,20 @@ impl eframe::App for MyApp {
 
             // 显示问候语
             ui.label(format!("Hello '{}', age {}", self.name, self.age));
+            // 运行Rhai脚本
+            ui.label(format!("{:?}", &self.rhai_result));
+            if ui.text_edit_singleline(&mut self.rhai_script).lost_focus() {
+                self.rhai_result = self.rhai_engine.eval::<rhai::Dynamic>(&self.rhai_script);
+            }
+            if ui.button("Run").clicked() {
+                self.rhai_result = self.rhai_engine.eval::<rhai::Dynamic>(&self.rhai_script);
+            }
             // 显示图片
-            ui.add(
-                Image::new(&self.image)
-                    .corner_radius(5)
-                    .rotate((self.age as f32).to_radians(), Vec2::splat(0.5)),
-            );
+            // ui.add(
+            //     Image::new(&self.image)
+            //         .corner_radius(5)
+            //         .rotate((self.age as f32).to_radians(), Vec2::splat(0.5)),
+            // );
         });
     }
 }
