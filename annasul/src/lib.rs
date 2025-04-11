@@ -1,6 +1,20 @@
+///
+/// log
+///
+#[cfg(feature = "log")]
 pub mod log;
+///
+/// prelude
+///
 pub mod prelude;
+///
+/// render
+///
+#[cfg(feature = "render")]
 pub mod render;
+///
+/// utils
+///
 pub mod utils;
 pub use annasul_build::consts;
 
