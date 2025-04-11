@@ -9,8 +9,7 @@ use std::{
 
 use annasul::include_asset;
 use eframe::egui::{
-    self, Color32, ColorImage, Image, RichText, TextureHandle, TextureOptions, UiBuilder, Vec2,
-    ViewportCommand,
+    self, Color32, ColorImage, Image, RichText, TextureHandle, TextureOptions, Vec2,
 };
 use log::info;
 use wgpu::rwh::HasWindowHandle;
@@ -29,10 +28,7 @@ include_asset!();
 fn main() -> Result<(), eframe::Error> {
     env_logger::Builder::from_default_env()
         .target(env_logger::Target::Stdout)
-        .format(|buf, record| {
-            annasul::log::write_global_buffer(record);
-            buf.write_fmt(format_args!("{}", record.args()))
-        })
+        .format(|buf, record| buf.write_fmt(format_args!("{}", record.args())))
         .init();
     // 创建通信通道
     let (cmd_sender, cmd_receiver) = mpsc::channel::<Command>();
@@ -52,7 +48,7 @@ fn main() -> Result<(), eframe::Error> {
                     });
                     *result.write().unwrap() = Some(
                         app.rhai_engine
-                            .eval_expression::<rhai::Dynamic>(&script)
+                            .eval::<rhai::Dynamic>(&script)
                             .map(|v| format!("{v:?}"))
                             .map_err(|e| format!("{e:?}")),
                     );
@@ -160,7 +156,7 @@ impl eframe::App for UIThreadApp {
     fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
         egui::Color32::TRANSPARENT.to_normalized_gamma_f32()
     }
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.set_visuals(egui::Visuals {
             window_fill: egui::Color32::MAGENTA,
             panel_fill: egui::Color32::TRANSPARENT,
@@ -209,42 +205,14 @@ impl eframe::App for UIThreadApp {
                     .unwrap();
             }
 
-            // 显示图片
-            // ui.add(
-            //     Image::new(&self.image)
-            //         .corner_radius(5)
-            //         .rotate((self.age as f32).to_radians(), Vec2::splat(0.5)),
-            // );
-        });
-        egui::CentralPanel::default().show(ctx, |ui| {
-            log_panel(ui);
+            ui.add(
+                Image::new(&self.image)
+                    .corner_radius(5)
+                    .rotate((self.age as f32).to_radians(), Vec2::splat(0.5)),
+            );
         });
     }
     fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
         self.main_thread_sender.send(Command::Exit).unwrap();
     }
-}
-
-fn log_panel(ui: &mut egui::Ui) {
-    let logs = annasul::log::read_global_buffer().unwrap();
-
-    egui::ScrollArea::vertical()
-        .stick_to_bottom(true) // 自动滚动到底部
-        .show(ui, |ui| {
-            for log_message in logs.iter() {
-                let color = match log_message.level {
-                    log::Level::Trace => egui::Color32::MAGENTA,
-                    log::Level::Debug => egui::Color32::BLUE,
-                    log::Level::Info => egui::Color32::WHITE,
-                    log::Level::Warn => egui::Color32::YELLOW,
-                    log::Level::Error => egui::Color32::RED,
-                };
-
-                let timestamp = format!("{:?}", log_message.timestamp);
-                ui.horizontal(|ui| {
-                    ui.colored_label(color, timestamp);
-                    ui.colored_label(color, &log_message.message);
-                });
-            }
-        });
 }
