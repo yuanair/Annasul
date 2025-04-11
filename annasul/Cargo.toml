@@ -11,7 +11,8 @@ exclude = ["rc"]
 
 [features]
 window = ["dep:winit", "dep:raw-window-handle"]
-vulkan = ["dep:vulkano", "dep:vulkano-shaders"]
+render = ["dep:raw-window-handle"]
+render_vulkan = ["render", "dep:vulkano", "dep:vulkano-shaders"]
 serde = ["dep:serde"]
 log = ["dep:log"]
 

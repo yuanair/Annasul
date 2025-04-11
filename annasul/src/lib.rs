@@ -16,7 +16,11 @@ pub mod render;
 /// utils
 ///
 pub mod utils;
-pub use annasul_build::consts;
+///
+/// window
+///
+#[cfg(feature = "window")]
+pub mod window;
 
 /// # Include the generated asset file.
 /// ```json

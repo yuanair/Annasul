@@ -56,6 +56,19 @@
 				"$rustc"
 			],
 			"label": "example: build release"
-		}
+		},
+		{
+			"type": "cargo",
+			"group": "test",
+			"command": "test",
+			"args": [
+				"--",
+				"--nocapture"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"label": "cargo test"
+		},
 	]
 }
