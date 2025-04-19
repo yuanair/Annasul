@@ -1,6 +1,4 @@
 use std::{io::Write, sync::Arc};
-
-use annasul::render::vulkan::{Instance, InstanceBuilder};
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -11,17 +9,11 @@ use winit::{
 
 struct App {
     window: Option<Arc<Window>>,
-    instance: Option<Arc<Instance>>,
-    render_info: Option<annasul::render::vulkan::RenderInfo>,
 }
 
 impl App {
     fn new() -> Self {
-        Self {
-            window: None,
-            instance: None,
-            render_info: None,
-        }
+        Self { window: None }
     }
 }
 
@@ -32,25 +24,6 @@ impl ApplicationHandler for App {
                 .create_window(Window::default_attributes())
                 .unwrap(),
         ));
-        let instance = InstanceBuilder::default()
-            .with_mut_extensions(|ext| {
-                *ext = ext.union(&InstanceBuilder::require_extension(event_loop).unwrap());
-            })
-            .build()
-            .unwrap();
-        self.instance = Some(instance.clone());
-        self.render_info = Some(
-            annasul::render::vulkan::Builder::new(instance.clone())
-                .with_inner_size(self.window.as_ref().unwrap().inner_size().into())
-                .with_surface(
-                    annasul::render::vulkan::SurfaceBuilder::FromRawWindowHandle {
-                        instance,
-                        handle: self.window.as_ref().unwrap().clone(),
-                    },
-                )
-                .build()
-                .unwrap(),
-        );
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {

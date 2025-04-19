@@ -8,11 +8,6 @@ pub mod log;
 ///
 pub mod prelude;
 ///
-/// render
-///
-#[cfg(feature = "render")]
-pub mod render;
-///
 /// utils
 ///
 pub mod utils;
