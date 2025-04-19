@@ -1,12 +1,13 @@
-// C++ 20
-// clang version 18.1.8
-// Target: x86_64-pc-windows-msvc
-
-#include <format>
+// C++ 23
+#include <algorithm>
 #include <iostream>
+#include <vector>
+
+using namespace std;
 
 int main() {
-    auto num = 5;
-    std::cout << std::format("{}", num) << std::endl;
+    auto vec{vector{1, 2, 3, 4, 5}};
+    for_each(vec.begin(), vec.end(), [](auto i) { cout << i << " "; });
+    cout << endl;
     return 0;
 }
