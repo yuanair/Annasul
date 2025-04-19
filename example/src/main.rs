@@ -62,11 +62,6 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                let queue = self.render_info.as_ref().unwrap().queues[0].clone();
-                let (_, _, _, framebuffer) = self.render_info.as_ref().unwrap().surface.unwrap();
-                CommandBufferBuilder::new(queue, framebuffer[0])
-                    .build()
-                    .unwrap();
                 self.window.as_ref().unwrap().request_redraw();
             }
             _ => {}
