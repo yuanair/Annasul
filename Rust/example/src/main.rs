@@ -1,9 +1,6 @@
 use std::{io::Write, sync::Arc};
 
-use annasul::{
-    include_asset,
-    render::vulkan::{CommandBufferBuilder, Instance, InstanceBuilder},
-};
+use annasul::render::vulkan::{Instance, InstanceBuilder};
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,

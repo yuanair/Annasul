@@ -1,0 +1,8 @@
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+
+find_program(CMAKE_C_COMPILER NAMES clang)
+find_program(CMAKE_CXX_COMPILER NAMES clang++)
+
+set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_CPP_FLAGS "${CMAKE_C_FLAGS}")

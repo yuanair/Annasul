@@ -1,0 +1,5 @@
+{
+    "cmake.sourceDirectory": "W:/WorkSpace/Annasul/CPP",
+    "cmake.buildDirectory": "${workspaceFolder}/CPP/build",
+    "cmake.generator": "Ninja"
+}

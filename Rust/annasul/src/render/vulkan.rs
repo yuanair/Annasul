@@ -11,10 +11,7 @@ use vulkano::{
     command_buffer::{
         AutoCommandBufferBuilder, CommandBufferUsage, PrimaryAutoCommandBuffer,
         RenderPassBeginInfo, SubpassBeginInfo, SubpassEndInfo,
-        allocator::{
-            CommandBufferAllocator, StandardCommandBufferAllocator,
-            StandardCommandBufferAllocatorCreateInfo,
-        },
+        allocator::{StandardCommandBufferAllocator, StandardCommandBufferAllocatorCreateInfo},
     },
     device::{
         Device, DeviceCreateInfo, DeviceExtensions, Queue, QueueCreateInfo,

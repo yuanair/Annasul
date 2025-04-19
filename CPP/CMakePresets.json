@@ -2,14 +2,90 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "Debug",
-            "displayName": "使用工具链文件配置预设",
-            "description": "设置 Ninja 生成器、版本和安装目录",
+            "name": "Debug-Windows-x86_64-LLVM",
+            "displayName": "Debug-Windows-x86_64-LLVM",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-LLVM.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Release-Windows-x86_64-LLVM",
+            "displayName": "Release-Windows-x86_64-LLVM",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-LLVM.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Debug-Windows-x86_64-MSVC",
+            "displayName": "Debug-Windows-x86_64-MSVC",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-MSVC.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Release-Windows-x86_64-MSVC",
+            "displayName": "Release-Windows-x86_64-MSVC",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-MSVC.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Debug-Android-arm64-v8a",
+            "displayName": "Debug-Android-arm64-v8a",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-arm64-v8a.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Release-Android-arm64-v8a",
+            "displayName": "Release-Android-arm64-v8a",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-arm64-v8a.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Debug-Android-x86_64",
+            "displayName": "Debug-Android-x86_64",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-x86_64.cmake",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            }
+        },
+        {
+            "name": "Release-Android-x86_64",
+            "displayName": "Release-Android-x86_64",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-x86_64.cmake",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             }
         }

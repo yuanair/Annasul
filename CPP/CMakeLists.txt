@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.25)
 project(hello_world VERSION 0.1.0 LANGUAGES C CXX)
 
-add_executable(hello_world main.cpp)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_executable(hello_world main.cppm)
+ 

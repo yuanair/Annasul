@@ -69,6 +69,6 @@
 				"$rustc"
 			],
 			"label": "cargo test"
-		},
+		}
 	]
 }
