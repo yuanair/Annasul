@@ -1,5 +1,8 @@
 {
     "cmake.sourceDirectory": "W:/WorkSpace/Annasul/CPP",
-    "cmake.buildDirectory": "${workspaceFolder}/CPP/build",
-    "cmake.generator": "Ninja"
+    "cmake.useCMakePresets": "always",
+    "cmake.copyCompileCommands": "${workspaceFolder}/CPP/out/build/compile_commands.json",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/CPP/out/build"
+    ],
 }

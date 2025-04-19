@@ -6,10 +6,10 @@
             "displayName": "Debug-Windows-x86_64-LLVM",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Windows-x86_64-LLVM.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-LLVM.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
@@ -17,10 +17,10 @@
             "displayName": "Release-Windows-x86_64-LLVM",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Windows-x86_64-LLVM.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-LLVM.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
@@ -28,10 +28,10 @@
             "displayName": "Debug-Windows-x86_64-MSVC",
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Windows-x86_64-MSVC.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-MSVC.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
@@ -39,10 +39,10 @@
             "displayName": "Release-Windows-x86_64-MSVC",
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Windows-x86_64-MSVC.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Windows-x86_64-MSVC.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
@@ -50,10 +50,10 @@
             "displayName": "Debug-Android-arm64-v8a",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Android-arm64-v8a.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-arm64-v8a.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
@@ -61,10 +61,10 @@
             "displayName": "Release-Android-arm64-v8a",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Android-arm64-v8a.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-arm64-v8a.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
@@ -72,10 +72,10 @@
             "displayName": "Debug-Android-x86_64",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Android-x86_64.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-x86_64.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
@@ -83,10 +83,10 @@
             "displayName": "Release-Android-x86_64",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "toolchain/Android-x86_64.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "toolchain/Android-x86_64.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "Release"
             }
         }
     ]
