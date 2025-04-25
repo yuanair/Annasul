@@ -40,6 +40,9 @@ mod tests {
                 WindowEvent::RedrawRequested => {
                     self.window.as_ref().unwrap().request_redraw();
                 }
+                WindowEvent::Touch(touch) => {
+                    println!("Touch: {:?}", touch);
+                }
                 _ => {}
             }
         }

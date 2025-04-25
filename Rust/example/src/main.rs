@@ -1,4 +1,4 @@
-use std::{io::Write, sync::Arc};
+use std::sync::Arc;
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -42,7 +42,6 @@ impl ApplicationHandler for App {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::Builder::from_default_env()
         .target(env_logger::Target::Stdout)
-        .format(|buf, record| buf.write_fmt(format_args!("{}", record.args())))
         .init();
     let event_loop = EventLoopBuilder::default()
         .with_any_thread(true)

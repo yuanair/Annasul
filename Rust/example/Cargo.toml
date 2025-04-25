@@ -7,7 +7,8 @@ build = "build.rs"
 [dependencies]
 wgpu = { version = "24.0.3", features = ["glsl"] }
 annasul = { version = "0.1.0", path = "../annasul", features = [
-    "render_vulkan",
+    "render_wgpu",
+    "application",
 ] }
 toml = "0.8.20"
 winit = { version = "0.30.9" }
