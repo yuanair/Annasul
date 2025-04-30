@@ -2,25 +2,40 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "example: Windows, Debug",
-            "preLaunchTask": "example: build debug",
-            "type": "cppvsdbg",
+            "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/target/debug/example.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/target/debug",
-            "environment": [
-                {
-                    "name": "RUST_LOG",
-                    "value": "info"
-                },
-                {
-                    "name": "RUST_BACKTRACE",
-                    "value": "1"
+            "name": "Cargo test 'annasul'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--package=annasul"
+                ],
+                "env": {
+                    "RUST_LOG": "info",
+                    "RUST_BACKTRACE": "1"
                 }
-            ],
-            "console": "integratedTerminal"
+            },
+            "args": [
+                "--nocapture"
+            ]
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Cargo launch 'example'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=example",
+                    "--package=example"
+                ],
+                "env": {
+                    "RUST_LOG": "info",
+                    "RUST_BACKTRACE": "1"
+                }
+            },
+            "args": []
         }
     ]
 }

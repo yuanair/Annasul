@@ -23,52 +23,6 @@
 				"$rustc"
 			],
 			"label": "cargo doc --open"
-		},
-		{
-			"type": "cargo",
-			"group": "build",
-			"command": "build",
-			"env": {
-				"RUST_LOG": "info"
-			},
-			"args": [
-				"--bin",
-				"example"
-			],
-			"problemMatcher": [
-				"$rustc"
-			],
-			"label": "example: build debug"
-		},
-		{
-			"type": "cargo",
-			"group": "build",
-			"command": "build",
-			"env": {
-				"RUST_LOG": "info"
-			},
-			"args": [
-				"--release",
-				"--bin",
-				"example"
-			],
-			"problemMatcher": [
-				"$rustc"
-			],
-			"label": "example: build release"
-		},
-		{
-			"type": "cargo",
-			"group": "test",
-			"command": "test",
-			"args": [
-				"--",
-				"--nocapture"
-			],
-			"problemMatcher": [
-				"$rustc"
-			],
-			"label": "cargo test"
 		}
 	]
 }
