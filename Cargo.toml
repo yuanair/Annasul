@@ -1,3 +1,3 @@
 [workspace]
 resolver = "3"
-members = []
+members = [ "Rust/annasul_engine","Rust/engine"]
