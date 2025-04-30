@@ -1,8 +1,3 @@
 [workspace]
 resolver = "3"
-members = [
-    "Rust/annasul",
-    "Rust/annasul_build",
-    "Rust/example",
-    "Rust/hello_world",
-]
+members = ["Rust/annasul", "Rust/annasul_build", "Rust/example"]

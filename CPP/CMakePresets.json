@@ -5,9 +5,9 @@
             "name": "Debug-Windows-x86_64-LLVM",
             "displayName": "Debug-Windows-x86_64-LLVM",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Windows-x86_64-LLVM.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Windows-x86_64-LLVM.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -16,9 +16,9 @@
             "name": "Release-Windows-x86_64-LLVM",
             "displayName": "Release-Windows-x86_64-LLVM",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Windows-x86_64-LLVM.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Windows-x86_64-LLVM.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -27,9 +27,9 @@
             "name": "Debug-Windows-x86_64-MSVC",
             "displayName": "Debug-Windows-x86_64-MSVC",
             "generator": "Visual Studio 17 2022",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Windows-x86_64-MSVC.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Windows-x86_64-MSVC.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -38,9 +38,9 @@
             "name": "Release-Windows-x86_64-MSVC",
             "displayName": "Release-Windows-x86_64-MSVC",
             "generator": "Visual Studio 17 2022",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Windows-x86_64-MSVC.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Windows-x86_64-MSVC.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -49,9 +49,9 @@
             "name": "Debug-Android-arm64-v8a",
             "displayName": "Debug-Android-arm64-v8a",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Android-arm64-v8a.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Android-arm64-v8a.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -60,9 +60,9 @@
             "name": "Release-Android-arm64-v8a",
             "displayName": "Release-Android-arm64-v8a",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Android-arm64-v8a.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Android-arm64-v8a.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -71,9 +71,9 @@
             "name": "Debug-Android-x86_64",
             "displayName": "Debug-Android-x86_64",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Android-x86_64.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Android-x86_64.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -82,9 +82,31 @@
             "name": "Release-Android-x86_64",
             "displayName": "Release-Android-x86_64",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "toolchainFile": "toolchain/Android-x86_64.cmake",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Android-x86_64.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "Debug-Linux-x86_64-LLVM",
+            "displayName": "Debug-Linux-x86_64-LLVM",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Linux-x86_64-LLVM.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release-Linux-x86_64-LLVM",
+            "displayName": "Release-Linux-x86_64-LLVM",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}\\out\\build\\${presetName}",
+            "installDir": "${sourceDir}\\out\\install\\${presetName}",
+            "toolchainFile": "toolchain\\Linux-x86_64-LLVM.cmake",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }

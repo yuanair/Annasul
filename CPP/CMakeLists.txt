@@ -5,9 +5,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF) 
-
-add_executable(hello_module main.cppm)
-
-add_executable(hello_world main.cpp)
  
 add_subdirectory(annasul)
+
+add_executable(hello_world main.cpp)
+target_link_libraries(hello_world PUBLIC annasul)
