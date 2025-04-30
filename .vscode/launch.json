@@ -9,6 +9,7 @@
                 "args": [
                     "test",
                     "--no-run",
+                    "--all-features",
                     "--package=annasul"
                 ],
                 "env": {
