@@ -4,7 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-editor = []
-
+editor = ["winit", "eframe"]
+winit = ["dep:winit"]
+eframe = ["dep:eframe", "dep:egui_extras"]
 [dependencies]
-winit = "0.30.10"
+eframe = { version = "0.31.1", optional = true, features = [
+    "android-native-activity",
+] }
+egui_extras = { version = "0.31.1", optional = true }
+winit = { version = "0.30.10", optional = true, features = [
+    "android-native-activity",
+] }
