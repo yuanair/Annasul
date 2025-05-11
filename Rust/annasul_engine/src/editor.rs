@@ -115,6 +115,7 @@ pub fn test_winit(app: Option<winit::platform::android::activity::AndroidApp>) {
 
 #[cfg(not(target_os = "android"))]
 pub fn test_winit(app: Option<()>) {
+    let _ = app;
     eframe::run_native(
         "editor",
         eframe::NativeOptions {

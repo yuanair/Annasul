@@ -26,6 +26,25 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Debug unit tests in library 'engine'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=engine"
+                ],
+                "filter": {
+                    "name": "engine",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Debug executable 'engine'",
             "cargo": {
                 "args": [
@@ -54,6 +73,62 @@
                 ],
                 "filter": {
                     "name": "engine",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'ice_bucket_query_tool'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=ice_bucket_query_tool"
+                ],
+                "filter": {
+                    "name": "ice_bucket_query_tool",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'ice_bucket_query_tool'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=ice_bucket_query_tool",
+                    "--package=ice_bucket_query_tool"
+                ],
+                "filter": {
+                    "name": "ice_bucket_query_tool",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'ice_bucket_query_tool'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=ice_bucket_query_tool",
+                    "--package=ice_bucket_query_tool"
+                ],
+                "filter": {
+                    "name": "ice_bucket_query_tool",
                     "kind": "bin"
                 }
             },

@@ -1,6 +1,7 @@
 {
 	"version": "2.0.0",
 	"tasks": [
+		// engine
 		{
 			"type": "cargo",
 			"command": "apk2",
@@ -15,6 +16,22 @@
 			],
 			"group": "build",
 			"label": "rust: cargo apk2 run -p engine --lib"
-		}
+		},
+		// ice_bucket_query_tool
+		{
+			"type": "cargo",
+			"command": "apk2",
+			"args": [
+				"run",
+				"-p",
+				"ice_bucket_query_tool",
+				"--lib",
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust: cargo apk2 run -p ice_bucket_query_tool --lib"
+		},
 	]
 }
