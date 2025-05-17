@@ -1,5 +1,11 @@
 {
     "rust-analyzer.cargo.target": "x86_64-pc-windows-msvc",
-    "cmake.sourceDirectory": "W:/WorkSpace/Annasul/CPP",
     // "rust-analyzer.cargo.target": "aarch64-linux-android"
+    "cmake.sourceDirectory": "W:/WorkSpace/Annasul/CPP",
+    "cmake.useCMakePresets": "always",
+    "cmake.configureOnOpen": true,
+    "cmake.copyCompileCommands": "${workspaceFolder}/CPP/out/build/compile_commands.json",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/CPP/out/build"
+    ],
 }
