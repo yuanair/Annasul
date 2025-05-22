@@ -1,0 +1,27 @@
+{
+	"version": 3,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 28,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "linux-x86_64-clang-debug",
+			"generator": "Ninja",
+			"binaryDir": "${sourceDir}/build/${presetName}",
+			"installDir": "${sourceDir}/install/${presetName}",
+			"toolchainFile": "${sourceDir}/toolchains/linux-x86_64-clang.cmake",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug",
+				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "linux-x86_64-clang-debug",
+			"configurePreset": "linux-x86_64-clang-debug"
+		}
+	]
+}
