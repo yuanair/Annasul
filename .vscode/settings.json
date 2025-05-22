@@ -3,8 +3,8 @@
     "cmake.buildDirectory": "${workspaceFolder}/CPP/build",
     "cmake.configureOnOpen": true,
     "cmake.useCMakePresets": "always",
-    "cmake.copyCompileCommands": "${workspaceFolder}/CPP/out/build/compile_commands.json",
+    "cmake.copyCompileCommands": "${workspaceFolder}/CPP/build/compile_commands.json",
     "clangd.arguments": [
-        "--compile-commands-dir=${workspaceFolder}/CPP/out/build"
+        "--compile-commands-dir=${workspaceFolder}/CPP/build"
     ],
 }
